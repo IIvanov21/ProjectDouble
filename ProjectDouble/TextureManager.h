@@ -53,6 +53,9 @@ public:
 	ID3D11Resource*           gStoneDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gStoneDiffuseSpecularMapSRV = nullptr; 
 
+	ID3D11Resource* gGreyDiffuseSpecularMap = nullptr;
+	ID3D11ShaderResourceView* gGreyDiffuseSpecularMapSRV = nullptr;
+
 	ID3D11Resource*           gTVDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gTVDiffuseSpecularMapSRV = nullptr;
 

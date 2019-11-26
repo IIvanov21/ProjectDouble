@@ -3,7 +3,7 @@
 ModelManager::ModelManager()
 {
 	// Additional light information
-	CVector3 gLightsPosition2[NUM_LIGHTS] = { {30,30,0},{-20,30,30},{20,30,130},{-10,15,180},{50,30,0},{100,30,135} };
+	CVector3 gLightsPosition2[NUM_LIGHTS] = { {30,30,0},{-20,30,30},{20,30,130},{ 50.0f,60.0f, -30.0f },{50,30,0},{ 50.0f,40.0f, -100.0f } };
 	float gLightStrengths2[NUM_LIGHTS] = {10.0f,40.0f,40.0f,20.0f,40.0f,20.0f};
 	CVector3 gLightsColours2[NUM_LIGHTS] = { { 0.8f, 0.8f, 1.0f } , { 1.0f, 0.8f, 0.2f },{ 0.5f, 0.8f, 0.2f },{ 1.0f, 0.8f, 0.2f }, { 1.0f, 0.8f, 0.2f },{ 1.0f, 0.8f, 0.2f } };
 	for (int i = 0; i < NUM_LIGHTS; i++)
@@ -62,6 +62,7 @@ ModelManager::~ModelManager()
 	delete gTeapotMesh;  gTeapotMesh = nullptr;
 	delete gTrollMesh; gTrollMesh = nullptr;
 	delete gWaterHouseMesh; gWaterHouseMesh = nullptr;
+	delete gMainHouseMesh; gMainHouseMesh = nullptr;
 }
 
 bool ModelManager::LoadMeshes()
@@ -79,6 +80,7 @@ bool ModelManager::LoadMeshes()
 		gTeapotMesh = new Mesh("Teapot.x");
 		gFloorMesh = new Mesh("mount.obj");
 		gWaterHouseMesh = new Mesh("waterWheelHouse.fbx");
+		gMainHouseMesh = new Mesh("mainHouse.fbx");
 	}
 	catch (std::runtime_error e)  
 	{
@@ -97,6 +99,7 @@ void ModelManager::CreateModels()
 	gSphere = new Model(gSphereMesh);
 	gGround = new Model(gGroundMesh);
 	gWaterHouse = new Model(gWaterHouseMesh);
+	gMainHouse = new Model(gMainHouseMesh);
 	for (int i = 0; i < NUM_LIGHTS; i++)
 	{
 		gLights[i].model = new Model(gLightMesh);
@@ -116,10 +119,15 @@ void ModelManager::InitialSceneSetup()
 	gCube[1]->SetPosition({ 60,5,180 });
 	gTroll->SetPosition({ 50,22,20 });
 	gTroll->SetScale(10.0f);
+	
 	//House render
 	gWaterHouse->SetPosition({ 140,18,135 });
 	gWaterHouse->SetRotation({ 0.0f,ToRadians(150.0f),0.0f });
 	gWaterHouse->SetScale(2.0f);
+	gMainHouse->SetScale(2.0f);
+	gMainHouse->SetPosition({ 50.0f,22.0f, -30.0f });
+
+
 	gFloor->SetPosition({0.0f, -50.0f, 0.0f});
 	gFloor->SetScale(50.0f);
 	gDecal->SetPosition({ 0, 15,  0 });
@@ -178,7 +186,10 @@ void ModelManager::PrepareRenderModels(ID3D11DeviceContext* gD3DContext, Texture
 
 
 	//Note to self:Add house shaders after textures have been complete
+	gD3DContext->PSSetShaderResources(0, 1, &GetTexture->gGreyDiffuseSpecularMapSRV);
+	gD3DContext->PSSetSamplers(0, 1, &gAnisotropic4xSampler);
 	gWaterHouse->Render();
+	gMainHouse->Render();
 	//Ground Texture Selection
 	gD3DContext->PSSetShaderResources(0, 1, &GetTexture->gGroundDiffuseSpecularMapSRV);
 	gD3DContext->PSSetSamplers(0, 1, &gAnisotropic4xSampler);

@@ -21,7 +21,7 @@ public:
 	float e20, e21, e22, e23;
 	float e30, e31, e32, e33;
 
-
+ 
     /*-----------------------------------------------------------------------------------------
         Member functions
     -----------------------------------------------------------------------------------------*/
@@ -34,13 +34,16 @@ public:
     // Can be used to access position or x,y,z axes from a matrix
     CVector3 GetRow(int iRow) const;
 
+    // Initialise this matrix with a pointer to 16 floats 
+    void SetValues(float* matrixValues)  { *this = *reinterpret_cast<CMatrix4x4*>(matrixValues); }
+
+ 
     // Helper functions
     CVector3 GetXAxis() const { return GetRow(0); }
     CVector3 GetYAxis() const { return GetRow(1); }
     CVector3 GetZAxis() const { return GetRow(2); }
-	CVector3 GetEulerAngles();
     CVector3 GetPosition() const  { return GetRow(3); }
-
+    CVector3 GetEulerAngles();
     CVector3 GetScale() const  { return { Length(GetXAxis()), Length(GetYAxis()) , Length(GetZAxis()) }; }
 
     // Post-multiply this matrix by the given one
@@ -51,6 +54,11 @@ public:
     // handedness (right-handed Z axis will face away from target)
     // Will retain the matrix's current scaling
     void FaceTarget(const CVector3& target);
+
+
+    // Transpose the matrix (rows become columns). There are two ways to store a matrix, by rows or by columns.
+    // Different apps use different methods. Use Transpose to swap when necessary.
+    void Transpose();
 };
 
 

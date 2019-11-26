@@ -16,7 +16,8 @@ bool TextureManager::LoadTextures()// Load all textures from image
 		!LoadTexture("StoneDiffuseSpecular.dds", &gTeapotSpecularDiffuseMap, &gTeapotSpecularDiffuseMapSRV) ||
 		!LoadTexture("WoodDiffuseSpecular.dds", &gWoodSpecularDiffuseMap, &gWoodSpecularDiffuseMapSRV)||
 		!LoadTexture("TrollDiffuseSpecular.dds", &gTrollSpecularDiffuseMap,&gTrollSpecularDiffuseMapSRV)||
-		!LoadTexture("tv.dds", &gTVDiffuseSpecularMap,&gTVDiffuseSpecularMapSRV))
+		!LoadTexture("tv.dds", &gTVDiffuseSpecularMap,&gTVDiffuseSpecularMapSRV) ||
+		!LoadTexture("greyTexture.jpg", &gGreyDiffuseSpecularMap, &gGreyDiffuseSpecularMapSRV))
 	{
 		gLastError = "Error loading textures";
 		return false;
@@ -198,4 +199,8 @@ void TextureManager::ReleaseTextures()//Release all texture and prepare for use
 
 	if (gTVDiffuseSpecularMap)gTVDiffuseSpecularMap->Release();
 	if (gTVDiffuseSpecularMapSRV)gTVDiffuseSpecularMapSRV->Release();
+
+	if (gGreyDiffuseSpecularMap)gGreyDiffuseSpecularMap->Release();
+	if (gGreyDiffuseSpecularMapSRV)gGreyDiffuseSpecularMapSRV->Release();
+
 }

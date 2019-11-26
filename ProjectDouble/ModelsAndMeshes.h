@@ -24,6 +24,7 @@ public:
 	Mesh* gTeapotMesh;
 	Mesh* gInnMesh;
 	Mesh* gWaterHouseMesh;
+	Mesh* gMainHouseMesh;
 	//========Models========//
 	Model* gFloor;
 	Model* gTeapot;
@@ -33,6 +34,7 @@ public:
 	Model* gCrate;
 	Model* gSphere;
 	Model* gGround;
+	Model* gMainHouse;
 	struct Light
 	{
 		Model*   model;
