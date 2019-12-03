@@ -1,44 +1,75 @@
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\vc141.pdb
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\vc141.idb
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\timer.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\graphicshelpers.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\input.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\texturemanager.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\state.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\mesh.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\shader.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\scene.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\modelsandmeshes.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\model.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\cvector3.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\cvector2.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\cmatrix4x4.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\main.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\direct3dsetup.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\camera.obj
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\depthonly_ps.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\lerpshader_ps.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\lerpshader_vs.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\lightmodel_ps.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\lightmodel_vs.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\pixellighting_ps.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\pixellighting_vs.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\shadowmapping_ps.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\shadowmapping_vs.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\transformlighting_ps.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\transformlighting_vs.cso
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\rendertexture.ilk
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\rendertexture.exe
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\rendertexture.pdb
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\\rendertexture.pdb
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\\rendertexture.exe
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\\rendertexture.ilk
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\cl.command.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\cl.read.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\cl.write.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\fxc.command.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\fxc.read.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\fxc.write.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\link.command.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\link.read.1.tlog
-c:\users\callt\desktop\graphics assignment ivaylo ivanov\x64\debug\rendertexture.tlog\link.write.1.tlog
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\vc142.pdb
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\vc142.idb
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\timer.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\graphicshelpers.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\input.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\texturemanager.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\state.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\mesh.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\shader.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\scene.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\modelsandmeshes.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\model.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\cvector3.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\cvector2.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\cmatrix4x4.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\main.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\direct3dsetup.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\camera.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\vc142.pdb
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\vc142.idb
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\timer.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\graphicshelpers.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\input.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\texturemanager.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\state.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\mesh.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\shader.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\scene.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\modelsandmeshes.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\cvector3.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\cvector2.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\cmatrix4x4.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\main.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\direct3dsetup.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\camera.obj
+c:\users\callt\documents\github\projectdouble\projectdouble\depthonly_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\lerpshader_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\lerpshader_vs.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\lightmodel_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\lightmodel_vs.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\pixellighting_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\pixellighting_vs.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\shadowmapping_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\shadowmapping_vs.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\transformlighting_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\transformlighting_vs.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\depthonly_ps.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\lerpshader_ps.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\lerpshader_vs.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\lightmodel_ps.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\lightmodel_vs.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\pixellighting_ps.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\pixellighting_vs.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\shadowmapping_ps.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\shadowmapping_vs.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\transformlighting_ps.cso
+d:\users\iivanov\documents\github\projectdouble\projectdouble\transformlighting_vs.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\rendertexture.exe
+c:\users\callt\documents\github\projectdouble\projectdouble\rendertexture.ilk
+c:\users\callt\documents\github\projectdouble\projectdouble\rendertexture.pdb
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\model.obj
+d:\users\iivanov\documents\github\projectdouble\projectdouble\\rendertexture.pdb
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\cl.command.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\cl.read.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\cl.write.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\fxc.command.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\fxc.read.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\fxc.write.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\link-cvtres.read.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\link-cvtres.write.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\link-rc.read.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\link-rc.write.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\link.command.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\link.read.1.tlog
+d:\users\iivanov\documents\github\projectdouble\projectdouble\x64\debug\rendertexture.tlog\link.write.1.tlog
