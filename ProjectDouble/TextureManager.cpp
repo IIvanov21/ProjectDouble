@@ -7,17 +7,17 @@ TextureManager::TextureManager()
 }
 bool TextureManager::LoadTextures()// Load all textures from image
 {
-	if (!LoadTexture("StoneDiffuseSpecular.dds", &gStoneDiffuseSpecularMap, &gStoneDiffuseSpecularMapSRV) ||
-		!LoadTexture("Moogle.png", &gDecalDiffuseSpecularMap, &gDecalDiffuseSpecularMapSRV) ||
-		!LoadTexture("CargoA.dds", &gCrateDiffuseSpecularMap, &gCrateDiffuseSpecularMapSRV) ||
-		!LoadTexture("Brick1.jpg", &gBrickDiffuseSpecularMap, &gBrickDiffuseSpecularMapSRV) ||
-		!LoadTexture("MountGrassTexture2.jpg", &gGroundDiffuseSpecularMap, &gGroundDiffuseSpecularMapSRV) ||
-		!LoadTexture("Flare.jpg", &gLightDiffuseMap, &gLightDiffuseMapSRV) ||
-		!LoadTexture("StoneDiffuseSpecular.dds", &gTeapotSpecularDiffuseMap, &gTeapotSpecularDiffuseMapSRV) ||
-		!LoadTexture("WoodDiffuseSpecular.dds", &gWoodSpecularDiffuseMap, &gWoodSpecularDiffuseMapSRV)||
-		!LoadTexture("TrollDiffuseSpecular.dds", &gTrollSpecularDiffuseMap,&gTrollSpecularDiffuseMapSRV)||
-		!LoadTexture("tv.dds", &gTVDiffuseSpecularMap,&gTVDiffuseSpecularMapSRV) ||
-		!LoadTexture("greyTexture.jpg", &gGreyDiffuseSpecularMap, &gGreyDiffuseSpecularMapSRV))
+	if (!LoadTexture(TextureMediaFolder + "StoneDiffuseSpecular.dds", &gStoneDiffuseSpecularMap, &gStoneDiffuseSpecularMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "Moogle.png", &gDecalDiffuseSpecularMap, &gDecalDiffuseSpecularMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "CargoA.dds", &gCrateDiffuseSpecularMap, &gCrateDiffuseSpecularMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "Brick1.jpg", &gBrickDiffuseSpecularMap, &gBrickDiffuseSpecularMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "MountGrassTexture2.jpg", &gGroundDiffuseSpecularMap, &gGroundDiffuseSpecularMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "Flare.jpg", &gLightDiffuseMap, &gLightDiffuseMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "StoneDiffuseSpecular.dds", &gTeapotSpecularDiffuseMap, &gTeapotSpecularDiffuseMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "WoodDiffuseSpecular.dds", &gWoodSpecularDiffuseMap, &gWoodSpecularDiffuseMapSRV)||
+		!LoadTexture(TextureMediaFolder + "TrollDiffuseSpecular.dds", &gTrollSpecularDiffuseMap,&gTrollSpecularDiffuseMapSRV)||
+		!LoadTexture(TextureMediaFolder + "tv.dds", &gTVDiffuseSpecularMap,&gTVDiffuseSpecularMapSRV) ||
+		!LoadTexture(TextureMediaFolder +"greyTexture.jpg", &gGreyDiffuseSpecularMap, &gGreyDiffuseSpecularMapSRV))
 	{
 		gLastError = "Error loading textures";
 		return false;

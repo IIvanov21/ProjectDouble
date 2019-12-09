@@ -121,7 +121,7 @@ extern PerFrameConstants gPerFrameConstants;      // This variable holds the CPU
 extern ID3D11Buffer*     gPerFrameConstantBuffer; // This variable controls the GPU-side constant buffer matching to the above structure
 
 
-
+static const int MAX_BONES = 64;
 // This is the matrix that positions the next thing to be rendered in the scene. Unlike the structure above this data can be
 // updated and sent to the GPU several times every frame (once per model). However, apart from that it works in the same way.
 struct PerModelConstants
@@ -129,6 +129,7 @@ struct PerModelConstants
     CMatrix4x4 worldMatrix;
     CVector3   objectColour; // Allows each light model to be tinted to match the light colour they cast
     float      padding6;
+	CMatrix4x4 boneMatrices[MAX_BONES];
 };
 extern PerModelConstants gPerModelConstants;      // This variable holds the CPU-side constant buffer described above
 extern ID3D11Buffer*     gPerModelConstantBuffer; // This variable controls the GPU-side constant buffer related to the above structure

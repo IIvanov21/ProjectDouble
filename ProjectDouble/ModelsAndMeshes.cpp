@@ -69,18 +69,18 @@ bool ModelManager::LoadMeshes()
 {
 	try
 	{
-		gCubeMesh = new Mesh("Cube.x");
-		gTrollMesh = new Mesh("Troll.x");
-		gDecalMesh = new Mesh("Decal.x");
-		gCrateMesh = new Mesh("CargoContainer.x");
-		gSphereMesh = new Mesh("Sphere.x");
-		gGroundMesh = new Mesh("Hills.x");
-		gLightMesh = new Mesh("Light.x");
-		gPortalMesh = new Mesh("Portal.x");
-		gTeapotMesh = new Mesh("Teapot.x");
-		gFloorMesh = new Mesh("mount.obj");
-		gWaterHouseMesh = new Mesh("waterWheelHouse.fbx");
-		gMainHouseMesh = new Mesh("mainHouse.fbx");
+		gCubeMesh = new Mesh(MeshesMediaFolder +"Cube.x");
+		gTrollMesh = new Mesh(MeshesMediaFolder + "Troll.x");
+		gDecalMesh = new Mesh(MeshesMediaFolder + "Decal.x");
+		gCrateMesh = new Mesh(MeshesMediaFolder + "CargoContainer.x");
+		gSphereMesh = new Mesh(MeshesMediaFolder + "Sphere.x");
+		gGroundMesh = new Mesh(MeshesMediaFolder + "Hills.x");
+		gLightMesh = new Mesh(MeshesMediaFolder + "Light.x");
+		gPortalMesh = new Mesh(MeshesMediaFolder + "Portal.x");
+		gTeapotMesh = new Mesh(MeshesMediaFolder + "Teapot.x");
+		gFloorMesh = new Mesh(MeshesMediaFolder + "mount.obj");
+		gWaterHouseMesh = new Mesh(MeshesMediaFolder + "waterWheelHouse.fbx");
+		gMainHouseMesh = new Mesh(MeshesMediaFolder + "mainHouse.fbx");
 	}
 	catch (std::runtime_error e)  
 	{
@@ -217,10 +217,7 @@ void ModelManager::PrepareRenderModels(ID3D11DeviceContext* gD3DContext, Texture
 	gD3DContext->PSSetShaderResources(1, 1, &GetTexture->gBrickDiffuseSpecularMapSRV);
 	gCube[1]->Render();
 
-	/*gD3DContext->VSSetShader(gTransformLightModelVertexShader, nullptr, 0);
-	gD3DContext->PSSetShader(gTransformLightModelPixelShader, nullptr, 0);
-	gD3DContext->PSSetShaderResources(0, 1, &GetTexture->gBrickDiffuseSpecularMapSRV);
-	gSphere->Render();*/
+	
 
 	gD3DContext->VSSetShader(gPixelLightingVertexShader, nullptr, 0);
 	gD3DContext->PSSetShader(gShadowMappingPixelShader, nullptr, 0);
@@ -284,7 +281,7 @@ void ModelManager::UpdateModels(float &frameTime, PerFrameConstants &gPerFrameCo
 	if (KeyHit(Key_1))  go = !go;
 
 	// Control sphere (will update its world matrix)
-	if(KeyHeld(Key_Z))gSphere->Control(frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
+	if(KeyHeld(Key_Z))gSphere->Control(gWholeMesh,frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
 	//Light pulsation 
 	if (gLightPulsation)
 	{
@@ -371,8 +368,8 @@ void ModelManager::UpdateModels(float &frameTime, PerFrameConstants &gPerFrameCo
 	static float rotate = 0.0f;
 	gLights[0].model->SetPosition(gCube[0]->Position() + CVector3{ cos(rotate) * gLightOrbit, 0.0f, sin(rotate) * gLightOrbit });
 	rotate -= gLightOrbitSpeed * frameTime;
-	if (KeyHeld(Key_X))gTeapot->Control(frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
-	if (KeyHeld(Key_C))gTroll->Control(frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
+	if (KeyHeld(Key_X))gTeapot->Control(gWholeMesh,frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
+	if (KeyHeld(Key_C))gTroll->Control(gWholeMesh,frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
 
 	// Control camera (will update its view matrix)
 	gCamera->Control(frameTime, Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D);

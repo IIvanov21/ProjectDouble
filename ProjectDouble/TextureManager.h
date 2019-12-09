@@ -1,9 +1,9 @@
 #pragma once
 #include "Definitions.h"
-
 class TextureManager
 {
 public:
+	const std::string TextureMediaFolder = "./Media/Textures/";
 	//--------------------------------------------------------------------------------------
 	// Portal Textures
 	//--------------------------------------------------------------------------------------

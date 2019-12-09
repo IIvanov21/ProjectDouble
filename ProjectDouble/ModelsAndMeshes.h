@@ -11,6 +11,8 @@ public:
 	const float gLightOrbitSpeed = 0.7f;
 	static const int NUM_LIGHTS = 6;
 	float ColourMax = 1.0f;
+	const int gWholeMesh = 0;
+	const std::string MeshesMediaFolder = "./Media/Meshes/";
 	//==========Meshes=========//
 	Mesh* gCubeMesh;
 	Mesh* gTrollMesh;

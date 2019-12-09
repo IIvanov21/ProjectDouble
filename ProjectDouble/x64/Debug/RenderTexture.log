@@ -1,14 +1,14 @@
-﻿  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\DepthOnly_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\LerpShader_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\LerpShader_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\LightModel_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\LightModel_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\PixelLighting_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\PixelLighting_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\ShadowMapping_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\ShadowMapping_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\TransformLighting_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\TransformLighting_vs.cso
+﻿  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\DepthOnly_ps.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\LerpShader_ps.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\LerpShader_vs.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\LightModel_ps.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\LightModel_vs.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\PixelLighting_ps.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\PixelLighting_vs.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\ShadowMapping_ps.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\ShadowMapping_vs.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\TransformLighting_ps.cso
+  compilation object save succeeded; see C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\TransformLighting_vs.cso
   Camera.cpp
   Direct3DSetup.cpp
   Main.cpp
@@ -16,7 +16,6 @@
   CVector2.cpp
   CVector3.cpp
   Model.cpp
-D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Model.cpp(24,19): error C2660: 'Mesh::Render': function does not take 0 arguments
   ModelsAndMeshes.cpp
   Scene.cpp
   Shader.cpp
@@ -27,4 +26,4 @@ D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Model.cpp(24,19): 
   GraphicsHelpers.cpp
   Timer.cpp
   Generating Code...
-D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Mesh.h(43,10): message : see declaration of 'Mesh::Render'
+  RenderTexture.vcxproj -> C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\\RenderTexture.exe
