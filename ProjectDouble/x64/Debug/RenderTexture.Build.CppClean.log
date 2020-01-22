@@ -17,6 +17,8 @@ c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\main.obj
 c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\direct3dsetup.obj
 c:\users\callt\documents\github\projectdouble\projectdouble\x64\debug\camera.obj
 c:\users\callt\documents\github\projectdouble\projectdouble\depthonly_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\lerpshader_ps.cso
+c:\users\callt\documents\github\projectdouble\projectdouble\lerpshader_vs.cso
 c:\users\callt\documents\github\projectdouble\projectdouble\lightmodel_ps.cso
 c:\users\callt\documents\github\projectdouble\projectdouble\lightmodel_vs.cso
 c:\users\callt\documents\github\projectdouble\projectdouble\pixellighting_ps.cso

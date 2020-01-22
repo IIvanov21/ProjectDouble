@@ -80,7 +80,7 @@ bool ModelManager::LoadMeshes()
 		gTeapotMesh = new Mesh(MeshesMediaFolder + "Teapot.x");
 		gFloorMesh = new Mesh(MeshesMediaFolder + "mount.obj");
 		gWaterHouseMesh = new Mesh(MeshesMediaFolder + "waterWheelHouse.fbx");
-		gMainHouseMesh = new Mesh(MeshesMediaFolder + "mainHouse.fbx");
+		gMainHouseMesh = new Mesh(MeshesMediaFolder + "mainHouse.obj");
 	}
 	catch (std::runtime_error e)  
 	{
@@ -187,7 +187,7 @@ void ModelManager::PrepareRenderModels(ID3D11DeviceContext* gD3DContext, Texture
 
 	//Note to self:Add house shaders after textures have been complete
 	gD3DContext->PSSetShaderResources(0, 1, &GetTexture->gGreyDiffuseSpecularMapSRV);
-	gD3DContext->PSSetSamplers(0, 1, &gAnisotropic4xSampler);
+	//gD3DContext->PSSetSamplers(0, 1, &gAnisotropic4xSampler);
 	gWaterHouse->Render();
 	gMainHouse->Render();
 	//Ground Texture Selection
@@ -370,7 +370,7 @@ void ModelManager::UpdateModels(float &frameTime, PerFrameConstants &gPerFrameCo
 	rotate -= gLightOrbitSpeed * frameTime;
 	if (KeyHeld(Key_X))gTeapot->Control(gWholeMesh,frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
 	if (KeyHeld(Key_C))gTroll->Control(gWholeMesh,frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
-
+	gMainHouse->Control(2, frameTime, Key_I, Key_K, Key_J, Key_L, Key_U, Key_O, Key_Period, Key_Comma);
 	// Control camera (will update its view matrix)
 	gCamera->Control(frameTime, Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D);
 	gPortalCamera->Control(frameTime, Key_T, Key_G, Key_F, Key_H, Key_B, Key_N, Key_J, Key_M);
