@@ -5,7 +5,7 @@
 // The class also doesn't load textures, filters or shaders as the outer code is
 // expected to select these things
 
-#include "CMatrix4x4.h"
+#include ".//Math//CMatrix4x4.h"
 #define NOMINMAX // Use this to stop Windows headers defining "min" and "max", which breaks some libraries (e.g. assimp)
 #include <d3d11.h>
 #include <assimp/scene.h>

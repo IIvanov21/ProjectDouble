@@ -82,7 +82,7 @@ bool InitGeometry()
 
 
     //**** Create Portal Texture ****//
-	TextureCreator->CreatePortalTextures();
+	TextureCreator->CreateTextures();
 	
 	
 

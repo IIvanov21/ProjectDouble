@@ -4,6 +4,8 @@ class TextureManager
 {
 public:
 	const std::string TextureMediaFolder = "./Media/Textures/";
+	unsigned int ViewportWidth;
+	unsigned int ViewportHeight;
 	//--------------------------------------------------------------------------------------
 	// Portal Textures
 	//--------------------------------------------------------------------------------------
@@ -82,11 +84,32 @@ public:
 
 	ID3D11Resource*			 gTrollSpecularDiffuseMap = nullptr;
 	ID3D11ShaderResourceView* gTrollSpecularDiffuseMapSRV = nullptr;
+
+	//***************************
+// Water Rendering Resources
+//***************************
+	// Water height - the y-coordinate of the water surface for each pixel on the screen
+// Used to determine what is above and below the water, and for underwater effects
+	ID3D11Texture2D* WaterHeightTexture;        // Memory used
+	ID3D11RenderTargetView* WaterHeightRenderTarget;   // For rendering into
+	ID3D11ShaderResourceView* WaterHeightShaderResource; // For reading out of (in shaders)
+
+	// Refraction texture - everything *below* the water is rendered into this
+	ID3D11Texture2D* RefractionTexture;
+	ID3D11RenderTargetView* RefractionRenderTarget;
+	ID3D11ShaderResourceView* RefractionShaderResource;
+
+	// Refraction texture - everything *above* the water is rendered into this
+	ID3D11Texture2D* ReflectionTexture;
+	ID3D11RenderTargetView* ReflectionRenderTarget;
+	ID3D11ShaderResourceView* ReflectionShaderResource;
+
+	//***************************
 	//--------------------------------------------------------------------------------------
 	// Texture Functionality
 	//--------------------------------------------------------------------------------------
 	TextureManager();
 	bool LoadTextures();
-	bool CreatePortalTextures();
+	bool CreateTextures(HWND hWnd);
 	void ReleaseTextures();
 };

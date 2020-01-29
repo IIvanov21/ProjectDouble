@@ -38,18 +38,18 @@ bool LoadShaders()
     // Shaders must be added to the Visual Studio project to be compiled, they use the extension ".hlsl".
     // To load them for use, include them here without the extension. Use the correct function for each.
     // Ensure you release the shaders in the ShutdownDirect3D function below
-    gPixelLightingVertexShader = LoadVertexShader("PixelLighting_vs"); // Note how the shader files are named to show what type they are
-    gPixelLightingPixelShader  = LoadPixelShader ("PixelLighting_ps");
-    gLightModelVertexShader = LoadVertexShader("LightModel_vs");
-    gLightModelPixelShader  = LoadPixelShader ("LightModel_ps");
-	gTransformLightModelVertexShader = LoadVertexShader("TransformLighting_vs");
-	gTransformLightModelPixelShader = LoadPixelShader("TransformLighting_ps");
-	gLerpVertexShader = LoadVertexShader("LerpShader_vs");
-	gLerpPixelShader = LoadPixelShader("LerpShader_ps");
-	gShadowMappingPixelShader = LoadPixelShader("ShadowMapping_ps");
-	gShadowMappingVertexShader = LoadVertexShader("ShadowMapping_vs");
-	gBasicTransformVertexShader = LoadVertexShader("BasicTransform_vs");
-	gDepthOnlyPixelShader = LoadPixelShader("DepthOnly_ps");
+    gPixelLightingVertexShader = LoadVertexShader(".\\Shaders\\PixelLighting_vs"); // Note how the shader files are named to show what type they are
+    gPixelLightingPixelShader  = LoadPixelShader (".\\Shaders\\PixelLighting_ps");
+    gLightModelVertexShader = LoadVertexShader(".\\Shaders\\LightModel_vs");
+    gLightModelPixelShader  = LoadPixelShader (".\\Shaders\\LightModel_ps");
+	gTransformLightModelVertexShader = LoadVertexShader(".\\Shaders\\TransformLighting_vs");
+	gTransformLightModelPixelShader = LoadPixelShader(".\\Shaders\\TransformLighting_ps");
+	gLerpVertexShader = LoadVertexShader(".\\Shaders\\LerpShader_vs");
+	gLerpPixelShader = LoadPixelShader(".\\Shaders\\LerpShader_ps");
+	gShadowMappingPixelShader = LoadPixelShader(".\\Shaders\\ShadowMapping_ps");
+	gShadowMappingVertexShader = LoadVertexShader(".\\Shaders\\ShadowMapping_vs");
+	gBasicTransformVertexShader = LoadVertexShader(".\\Shaders\\BasicTransform_vs");
+	gDepthOnlyPixelShader = LoadPixelShader(".\\Shaders\\DepthOnly_ps");
 	if (gPixelLightingVertexShader == nullptr || gPixelLightingPixelShader == nullptr ||
 		gLightModelVertexShader == nullptr || gLightModelPixelShader == nullptr ||
 		gTransformLightModelVertexShader == nullptr || gTransformLightModelPixelShader == nullptr ||

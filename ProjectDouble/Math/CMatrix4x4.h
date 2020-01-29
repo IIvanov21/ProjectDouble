@@ -58,7 +58,7 @@ public:
 
     // Transpose the matrix (rows become columns). There are two ways to store a matrix, by rows or by columns.
     // Different apps use different methods. Use Transpose to swap when necessary.
-    void Transpose();
+     void Transpose();
 };
 
 

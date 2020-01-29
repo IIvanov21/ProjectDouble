@@ -7,15 +7,6 @@
     <ClCompile Include="Utility\Timer.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Math\CMatrix4x4.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\CVector2.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\CVector3.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\GraphicsHelpers.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -49,6 +40,15 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Math\CMatrix4x4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\CVector2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\CVector3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utility\ColourRGBA.h">
@@ -59,18 +59,6 @@
     </ClInclude>
     <ClInclude Include="Utility\Timer.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\CMatrix4x4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\CVector2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\CVector3.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\MathHelpers.h">
-      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Utility\GraphicsHelpers.h">
       <Filter>Utility</Filter>
@@ -108,6 +96,21 @@
     <ClInclude Include="TextureManager.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Math\CMatrix4x4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\CVector2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\CVector3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MathHelpers.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Utility">
@@ -125,45 +128,67 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{5c54da8c-0c86-4ee1-9874-53adf2f86a35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{11db437b-b3c0-4b58-8c56-c872d3383612}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common.hlsli">
+    <None Include="Shaders\Portal_ps.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Portal_vs.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Common.hlsli">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="LightModel_ps.hlsl">
+    <FxCompile Include="Shaders\BasicTransform_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="LightModel_vs.hlsl">
+    <FxCompile Include="Shaders\DepthOnly_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="PixelLighting_ps.hlsl">
+    <FxCompile Include="Shaders\LerpShader_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="PixelLighting_vs.hlsl">
+    <FxCompile Include="Shaders\LerpShader_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="DepthOnly_ps.hlsl">
+    <FxCompile Include="Shaders\LightModel_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="LerpShader_ps.hlsl">
+    <FxCompile Include="Shaders\LightModel_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ShadowMapping_ps.hlsl">
+    <FxCompile Include="Shaders\PixelLighting_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ShadowMapping_vs.hlsl">
+    <FxCompile Include="Shaders\PixelLighting_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="TransformLighting_ps.hlsl">
+    <FxCompile Include="Shaders\ShadowMapping_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="TransformLighting_vs.hlsl">
+    <FxCompile Include="Shaders\ShadowMapping_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="LerpShader_vs.hlsl">
+    <FxCompile Include="Shaders\TransformLighting_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\TransformLighting_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Water.manifest">
+      <Filter>Resources</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Water.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

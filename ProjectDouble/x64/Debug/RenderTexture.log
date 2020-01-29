@@ -1,2 +1,14 @@
-﻿  ModelsAndMeshes.cpp
+﻿  Camera.cpp
+  Direct3DSetup.cpp
+  Main.cpp
+  CMatrix4x4.cpp
+  Mesh.cpp
+  Model.cpp
+  ModelsAndMeshes.cpp
+  Scene.cpp
+  Shader.cpp
+  State.cpp
+  TextureManager.cpp
+  GraphicsHelpers.cpp
+  Generating Code...
   RenderTexture.vcxproj -> C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\\RenderTexture.exe
