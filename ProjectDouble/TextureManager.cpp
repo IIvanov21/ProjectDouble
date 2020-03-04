@@ -27,8 +27,10 @@ bool TextureManager::LoadTextures()// Load all textures from image
 
 }
 
-bool TextureManager::CreateTextures(HWND hWnd)//Create all textures that are not laoded from image file
+bool TextureManager::CreateTextures(HWND &hWnd)//Create all textures that are not laoded from image file
 {
+	HRESULT hr = S_OK;
+
 	portalDesc.Width = gPortalWidth;  // Size of the portal texture determines its quality
 	portalDesc.Height = gPortalHeight;
 	portalDesc.MipLevels = 1; // No mip-maps when rendering to textures (or we would have to render every level)
@@ -170,52 +172,52 @@ bool TextureManager::CreateTextures(HWND hWnd)//Create all textures that are not
 	GetClientRect(hWnd, &rc);
 	ViewportWidth = rc.right - rc.left;
 	ViewportHeight = rc.bottom - rc.top;
-	D3D11_TEXTURE2D_DESC WaterTextureDesc = { 0 };
-	WaterTextureDesc.Width = ViewportWidth;
-	WaterTextureDesc.Height = ViewportHeight;
-	WaterTextureDesc.MipLevels = 1;
-	WaterTextureDesc.ArraySize = 1;
-	WaterTextureDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	WaterTextureDesc.SampleDesc.Count = 1;
-	WaterTextureDesc.SampleDesc.Quality = 0;
-	WaterTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	WaterTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	WaterTextureDesc.CPUAccessFlags = 0;
-	WaterTextureDesc.MiscFlags = 0;
-	hr = Device->CreateTexture2D(&WaterTextureDesc, NULL, &DepthStencil);
+	WaterDesc = { 0 };
+	WaterDesc.Width = ViewportWidth;
+	WaterDesc.Height = ViewportHeight;
+	WaterDesc.MipLevels = 1;
+	WaterDesc.ArraySize = 1;
+	WaterDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	WaterDesc.SampleDesc.Count = 1;
+	WaterDesc.SampleDesc.Quality = 0;
+	WaterDesc.Usage = D3D11_USAGE_DEFAULT;
+	WaterDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	WaterDesc.CPUAccessFlags = 0;
+	WaterDesc.MiscFlags = 0;
+	hr = gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &gWaterTexture);
 	if (FAILED(hr)) return false;
 
 	// Get a "view" of the texture as a depth buffer - giving us an interface for to select this texture as the depth target (e.g. for the OMSetRenderTargets function)
-	hr = Device->CreateDepthStencilView(DepthStencil, NULL, &DepthStencilView);
+	hr = gD3DDevice->CreateDepthStencilView(gWaterTexture, NULL, &gDepthStencil);
 	if (FAILED(hr)) return false;
 	// Create a refraction texture - everything *below* the water will be rendered into this
 	// Reuse WaterTextureDesc structure from above, most of the settings are the same
-	WaterTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
-	WaterTextureDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE; // Indicate we will use texture as render target, and pass it to shaders
-	if (FAILED(Device->CreateTexture2D(&WaterTextureDesc, NULL, &RefractionTexture)))  return false;
+	WaterDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
+	WaterDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE; // Indicate we will use texture as render target, and pass it to shaders
+	if (FAILED(gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &RefractionTexture)))  return false;
 
 	// Get a "view" of the texture as a render target - giving us an interface for rendering to the texture (e.g. in the OMSetRenderTargets function)
-	if (FAILED(Device->CreateRenderTargetView(RefractionTexture, NULL, &RefractionRenderTarget)))  return false;
+	if (FAILED(gD3DDevice->CreateRenderTargetView(RefractionTexture, NULL, &RefractionRenderTarget)))  return false;
 
 	// And get a shader-resource "view" - giving us an interface for passing the texture to shaders (e.g. in the SetResource function)
-	if (FAILED(Device->CreateShaderResourceView(RefractionTexture, NULL, &RefractionShaderResource)))  return false;
+	if (FAILED(gD3DDevice->CreateShaderResourceView(RefractionTexture, NULL, &RefractionShaderResource)))  return false;
 
 	//----
 
 	  // Create a reflection texture - everything *above* the water will be rendered into this, same process as above
-	if (FAILED(Device->CreateTexture2D(&WaterTextureDesc, NULL, &ReflectionTexture))) return false;
-	if (FAILED(Device->CreateRenderTargetView(ReflectionTexture, NULL, &ReflectionRenderTarget))) return false;
-	if (FAILED(Device->CreateShaderResourceView(ReflectionTexture, NULL, &ReflectionShaderResource))) return false;
+	if (FAILED(gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &ReflectionTexture))) return false;
+	if (FAILED(gD3DDevice->CreateRenderTargetView(ReflectionTexture, NULL, &ReflectionRenderTarget))) return false;
+	if (FAILED(gD3DDevice->CreateShaderResourceView(ReflectionTexture, NULL, &ReflectionShaderResource))) return false;
 
 	//----
 
 	// Create a water depth buffer texture - distance from camera to water surface is rendered into this (in world units, not 0->1 range)
 	  // This allows us to test what is above, and what is below the water. Works for non-flat water unlike the more
 	  // common approaches using flat "clip planes". Note: this is a depth buffer for the water, not how deep the water is
-	WaterTextureDesc.Format = DXGI_FORMAT_R32_FLOAT; // A single floating point value
-	if (FAILED(Device->CreateTexture2D(&WaterTextureDesc, NULL, &WaterHeightTexture))) return false;
-	if (FAILED(Device->CreateRenderTargetView(WaterHeightTexture, NULL, &WaterHeightRenderTarget))) return false;
-	if (FAILED(Device->CreateShaderResourceView(WaterHeightTexture, NULL, &WaterHeightShaderResource))) return false;
+	WaterDesc.Format = DXGI_FORMAT_R32_FLOAT; // A single floating point value
+	if (FAILED(gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &WaterHeightTexture))) return false;
+	if (FAILED(gD3DDevice->CreateRenderTargetView(WaterHeightTexture, NULL, &WaterHeightRenderTarget))) return false;
+	if (FAILED(gD3DDevice->CreateShaderResourceView(WaterHeightTexture, NULL, &WaterHeightShaderResource))) return false;
 
 
 	//**************************************
@@ -226,6 +228,19 @@ bool TextureManager::CreateTextures(HWND hWnd)//Create all textures that are not
 
 void TextureManager::ReleaseTextures()//Release all texture and prepare for use
 {
+	if (gWaterDepthStencil)gWaterDepthStencil->Release();
+	if (gWaterTexture)gWaterTexture->Release();
+	if (WaterHeightShaderResource)WaterHeightShaderResource->Release();
+	if (WaterHeightRenderTarget)WaterHeightRenderTarget->Release();
+	if (WaterHeightTexture)WaterHeightTexture->Release();
+	if (ReflectionShaderResource)  ReflectionShaderResource->Release();
+	if (ReflectionRenderTarget)    ReflectionRenderTarget->Release();
+	if (ReflectionTexture)         ReflectionTexture->Release();
+	if (RefractionShaderResource)  RefractionShaderResource->Release();
+	if (RefractionRenderTarget)    RefractionRenderTarget->Release();
+	if (RefractionTexture)         RefractionTexture->Release();
+
+
 	if (gPortalDepthStencilView)  gPortalDepthStencilView->Release();
 	if (gPortalDepthStencil)      gPortalDepthStencil->Release();
 	if (gPortalTextureSRV)        gPortalTextureSRV->Release();

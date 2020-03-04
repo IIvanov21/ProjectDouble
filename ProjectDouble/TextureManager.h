@@ -88,6 +88,9 @@ public:
 	//***************************
 // Water Rendering Resources
 //***************************
+	D3D11_TEXTURE2D_DESC WaterDesc;
+	ID3D11Texture2D* gWaterTexture = nullptr;
+	ID3D11DepthStencilView* gWaterDepthStencil = nullptr;
 	// Water height - the y-coordinate of the water surface for each pixel on the screen
 // Used to determine what is above and below the water, and for underwater effects
 	ID3D11Texture2D* WaterHeightTexture;        // Memory used
@@ -110,6 +113,6 @@ public:
 	//--------------------------------------------------------------------------------------
 	TextureManager();
 	bool LoadTextures();
-	bool CreateTextures(HWND hWnd);
+	bool CreateTextures(HWND &hWnd);
 	void ReleaseTextures();
 };

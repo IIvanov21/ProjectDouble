@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by Water.rc
 //
-
 #define IDS_APP_TITLE           103
 
 #define IDR_MAINFRAME           128

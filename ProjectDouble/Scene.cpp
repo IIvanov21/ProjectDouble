@@ -6,6 +6,8 @@
 #include "Definitions.h"
 #include "ModelsAndMeshes.h"
 #include "TextureManager.h"
+#include <d3d11.h>
+
 //--------------------------------------------------------------------------------------
 // Constant Buffers
 //--------------------------------------------------------------------------------------
@@ -82,7 +84,7 @@ bool InitGeometry()
 
 
     //**** Create Portal Texture ****//
-	TextureCreator->CreateTextures();
+	TextureCreator->CreateTextures(gHWnd);
 	
 	
 
