@@ -108,10 +108,6 @@
     <ClInclude Include="Math\MathHelpers.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Utility">
@@ -128,9 +124,6 @@
     </Filter>
     <Filter Include="Sources">
       <UniqueIdentifier>{5c54da8c-0c86-4ee1-9874-53adf2f86a35}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{11db437b-b3c0-4b58-8c56-c872d3383612}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,15 +174,5 @@
     <FxCompile Include="Shaders\TransformLighting_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="Water.manifest">
-      <Filter>Resources</Filter>
-    </Manifest>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Water.rc">
-      <Filter>Resources</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>
