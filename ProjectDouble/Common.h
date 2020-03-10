@@ -8,6 +8,7 @@
 #include <d3d11.h>
 #include <string>
 
+#include "CVector2.h"
 #include "CVector3.h"
 #include "CMatrix4x4.h"
 
@@ -62,11 +63,11 @@ struct PerFrameConstants
     CMatrix4x4 viewProjectionMatrix; // The above two matrices multiplied together to combine their effects
 
     CVector3   light1Position; // 3 floats: x, y z
-    float      padding1;      // IMPORTANT technical point: shaders work with float4 values. If constant buffer variables don't align
+    float      viewportWidth;      // IMPORTANT technical point: shaders work with float4 values. If constant buffer variables don't align
                               // to the size of a float4 then HLSL (GPU) will insert padding, which can cause problems matching 
                               // structure between C++ and GPU. So add these unused padding variables to both HLSL and C++ structures.
     CVector3   light1Colour;
-    float      padding2;
+    float      viewportHeight;
 	
 
     CVector3   light2Position;
@@ -115,6 +116,10 @@ struct PerFrameConstants
 
 	float	  wiggle;
 	float	 lerpCount;
+	// Miscellaneous water variables
+	float    waterPlaneY;   // Y coordinate of the water plane (before adding the height map)
+	float    waveScale;     // How tall the waves are (rescales weight heights and normals)
+	CVector2 waterMovement; // An offset added to the water height map UVs to make the water surface move
 };
 
 extern PerFrameConstants gPerFrameConstants;      // This variable holds the CPU-side constant buffer described above

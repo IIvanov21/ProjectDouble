@@ -219,8 +219,11 @@
     <None Include="Shaders\Portal_vs.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\BasicTransformWorldPos_vs.hlsl" />
     <FxCompile Include="Shaders\BasicTransform_vs.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders\\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shaders\DepthOnly_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -243,10 +246,18 @@
     <FxCompile Include="Shaders\PixelLighting_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders\\%(Filename).cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PixelLighting</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PixelLighting</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shaders\PixelLighting_vs.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders\\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <FxCompile Include="Shaders\ReflectedPixelLighting_ps.hlsl" />
+    <FxCompile Include="Shaders\ReflectedTintedTexture_ps.hlsl" />
+    <FxCompile Include="Shaders\RefractedPixelLighting_ps.hlsl" />
+    <FxCompile Include="Shaders\RefractedTintedTexture_ps.hlsl" />
     <FxCompile Include="Shaders\ShadowMapping_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders\\%(Filename).cso</ObjectFileOutput>
@@ -261,6 +272,10 @@
     <FxCompile Include="Shaders\TransformLighting_vs.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders\\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <FxCompile Include="Shaders\WaterHeight_ps.hlsl" />
+    <FxCompile Include="Shaders\WaterSurface_ps.hlsl" />
+    <FxCompile Include="Shaders\WaterSurface_vs.hlsl" />
+    <FxCompile Include="TintedTexture_ps.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

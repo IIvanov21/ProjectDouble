@@ -1,4 +1,4 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1875,5): warning : The referenced project 'Effects11\Effects11.vcxproj' does not exist.
+﻿  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\BasicTransformWorldPos_vs.cso
   compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\BasicTransform_vs.cso
   compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\DepthOnly_ps.cso
   compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\LerpShader_ps.cso
@@ -7,25 +7,6 @@
   compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\LightModel_vs.cso
   compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\PixelLighting_ps.cso
   compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\PixelLighting_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\ShadowMapping_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\ShadowMapping_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\TransformLighting_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\TransformLighting_vs.cso
-  Camera.cpp
-  Direct3DSetup.cpp
-  Main.cpp
-  CMatrix4x4.cpp
-  CVector2.cpp
-  CVector3.cpp
-  Model.cpp
-  ModelsAndMeshes.cpp
-  Scene.cpp
-  Shader.cpp
-  Mesh.cpp
-  State.cpp
-  TextureManager.cpp
-  Input.cpp
-  GraphicsHelpers.cpp
-  Timer.cpp
-  Generating Code...
-  RenderTexture.vcxproj -> D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\\RenderTexture.exe
+D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\ReflectedPixelLighting_ps.hlsl(32,45-55): error X4502: invalid vs_5_0 output semantic 'SV_Target'
+  
+  compilation failed; no code produced

@@ -3,7 +3,8 @@
 //--------------------------------------------------------------------------------------
 // Using include files to define the type of data passed between the shaders
 
-
+#ifndef _COMMON_HLSLI_DEFINED_
+#define _COMMON_HLSLI_DEFINED_
 //--------------------------------------------------------------------------------------
 // Shader input / output
 //--------------------------------------------------------------------------------------
@@ -15,6 +16,40 @@ struct BasicVertex
     float3 normal   : normal;
     float2 uv       : uv;
 };
+//--------------------------------------------------------------------------------------
+// Water Constants
+//--------------------------------------------------------------------------------------
+
+static const float  RefractionDistortion = 20.0f; // How distorted the refractions are
+static const float  ReflectionDistortion = 16.0f; // How distorted the reflections are
+static const float  MaxDistortionDistance = 40;    // Depth/height at which maximum distortion is reached
+static const float  SpecularStrength = 2.0f;  // Strength of specular lighting added to reflection, reduce to make water less shiny
+static const float  RefractionStrength = 0.8f;  // Maximum level of refraction (0-1), use to help define water edge but should remain high, use WaterExtinction
+static const float  ReflectionStrength = 0.85f; // Maximum level of reflection (0-1), reduce to make water less reflective, but it will also get darker
+static const float  WaterRefractiveIndex = 1.5f;  // Refractive index of clean water is 1.33. Impurities increase this value and values up to about 7.0 are sensible
+												   // Affects the blending of reflection and refraction. Higher values give more reflection
+static const float3 WaterExtinction = float3(15, 75, 300); // How far red, green and blue light can travel in the water. Values for clear tropical water
+//static const float3 WaterExtinction   = float3(15,16,25); // Values for unclear sea water
+//static const float3 WaterExtinction   = float3(9,7,3); // Values for flood water
+static const float  WaterDiffuseLevel = 0.5f;  // Brightness of particulates in water (change brightness of dirty water)
+
+// Water normal map/height map is sampled four times at different sizes, then overlaid to give a complex wave pattern
+static const float WaterSize1 = 0.5f;
+static const float WaterSize2 = 1.0f;
+static const float WaterSize3 = 2.0f;
+static const float WaterSize4 = 4.0f;
+
+// Each wave layer moves at different speeds so it animates in a varying manner
+static const float WaterSpeed1 = 0.5f;
+static const float WaterSpeed2 = 1.0f;
+static const float WaterSpeed3 = 1.7f;
+static const float WaterSpeed4 = 2.6f;
+
+// To get the correct wave height, must specify the height/normal map dimensions exactly. Assuming square normal maps
+static const float HeightMapHeightOverWidth = 1 / 32.0f; // Maximum height of height map compared to its width, this is effectively embedded in the normals
+														 // The normal maps for this lab have been created at this level. Used free AwesomeBump software
+static const float WaterWidth = 400.0f; // World space width of water surface (size of grid created when creating model in cpp file)
+static const float MaxWaveHeight = WaterWidth * HeightMapHeightOverWidth; // The above two values determine the maximum wave height in world units
 
 
 // This structure describes what data the lighting pixel shader receives from the vertex shader.
@@ -53,7 +88,13 @@ struct SimplePixelShaderInput
     float2 uv : uv;
 };
 
-
+// Data sent to pixel shaders that need world position, but not the world normal (some of the water shaders)
+struct WorldPositionPixelShaderInput
+{
+	float4 projectedPosition : SV_Position;
+	float3 worldPosition     : worldPosition;
+	float2 uv                : uv;
+};
 //--------------------------------------------------------------------------------------
 // Constant Buffers
 //--------------------------------------------------------------------------------------
@@ -71,11 +112,11 @@ cbuffer PerFrameConstants : register(b0) // The b0 gives this constant buffer th
     float4x4 gViewProjectionMatrix; // The above two matrices multiplied together to combine their effects
 
     float3   gLight1Position; 
-    float    padding1;        
+    float    gViewportWidth;        
                               
                               
     float3   gLight1Colour;
-    float    padding2;
+    float    gViewportHeight;
 
 
 
@@ -129,6 +170,10 @@ cbuffer PerFrameConstants : register(b0) // The b0 gives this constant buffer th
 
 	float wiggle;
 	float lerpCount;
+	// Miscellaneous water variables
+	float    gWaterPlaneY;   // Y coordinate of the water plane (before adding the height map)
+	float    gWaveScale;     // How tall the waves are (rescales weight heights and normals)
+	float2   gWaterMovement; // An offset added to the water height map UVs to make the water surface move
 }
 // Note constant buffers are not structs: we don't use the name of the constant buffer, these are really just a collection of global variables (hence the 'g')
 
@@ -146,3 +191,4 @@ cbuffer PerModelConstants : register(b1) // The b1 gives this constant buffer th
 
     float4x4 gBoneMatrices[MAX_BONES];
 }
+#endif // _COMMON_HLSLI_DEFINED_

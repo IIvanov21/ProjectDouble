@@ -23,3 +23,4 @@ SimplePixelShaderInput main(BasicVertex modelVertex)
 
 	return output; 
 }
+

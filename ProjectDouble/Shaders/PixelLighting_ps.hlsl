@@ -26,7 +26,7 @@ SamplerState TexSampler : register(s0); // A sampler is a filter for a texture l
 
 // Pixel shader entry point - each shader has a "main" function
 // This shader just samples a diffuse texture map
-float4 main(LightingPixelShaderInput input) : SV_Target
+float4 PixelLighting(LightingPixelShaderInput input) : SV_Target
 {
     // Lighting equations
     input.worldNormal = normalize(input.worldNormal); // Normal might have been scaled by model scaling or interpolation so renormalise
