@@ -70,6 +70,9 @@ public:
 	ID3D11Resource*           gBrickDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gBrickDiffuseSpecularMapSRV = nullptr;
 
+	ID3D11Resource* gSkyDiffuseSpecularMap = nullptr;
+	ID3D11ShaderResourceView* gSkyDiffuseSpecularMapSRV = nullptr;
+
 	ID3D11Resource*           gGroundDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gGroundDiffuseSpecularMapSRV = nullptr;
 
@@ -86,26 +89,23 @@ public:
 	ID3D11ShaderResourceView* gTrollSpecularDiffuseMapSRV = nullptr;
 
 	//***************************
-// Water Rendering Resources
-//***************************
-	D3D11_TEXTURE2D_DESC WaterDesc;
-	ID3D11Texture2D* gWaterTexture = nullptr;
-	ID3D11DepthStencilView* gWaterDepthStencil = nullptr;
-	// Water height - the y-coordinate of the water surface for each pixel on the screen
-// Used to determine what is above and below the water, and for underwater effects
-	ID3D11Texture2D* WaterHeightTexture;        // Memory used
-	ID3D11RenderTargetView* WaterHeightRenderTarget;   // For rendering into
-	ID3D11ShaderResourceView* WaterHeightShaderResource; // For reading out of (in shaders)
-
-	// Refraction texture - everything *below* the water is rendered into this
-	ID3D11Texture2D* RefractionTexture;
-	ID3D11RenderTargetView* RefractionRenderTarget;
-	ID3D11ShaderResourceView* RefractionShaderResource;
-
-	// Refraction texture - everything *above* the water is rendered into this
-	ID3D11Texture2D* ReflectionTexture;
-	ID3D11RenderTargetView* ReflectionRenderTarget;
-	ID3D11ShaderResourceView* ReflectionShaderResource;
+	// Water Rendering Resources
+	//***************************
+	//// Water textures / render targets
+	D3D11_TEXTURE2D_DESC		gWaterDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC gWaterDepthDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC gWaterShaderDesc;
+	ID3D11Resource*				gWaterNormalMap = nullptr;          // The normal/height map used for the waves on the surface of the water
+	ID3D11ShaderResourceView*	gWaterNormalMapSRV = nullptr;       // --"--
+	ID3D11Texture2D*			gWaterHeight = nullptr;            // The height of the water above the floor at each pixel - a data texture rendered each frame
+	ID3D11ShaderResourceView*	gWaterHeightSRV = nullptr;          // --"--  Used to detect the boundary between above water and underwater
+	ID3D11RenderTargetView*		gWaterHeightRenderTarget = nullptr; // --"--
+	ID3D11Texture2D*			gReflection = nullptr;             // The reflected scene is rendered into this texture 
+	ID3D11ShaderResourceView*	gReflectionSRV = nullptr;           // --"-- For reading the texture in shaders
+	ID3D11RenderTargetView*		gReflectionRenderTarget = nullptr;  // --"-- For writing to the texture as a render target
+	ID3D11Texture2D*			gRefraction = nullptr;             // The refracted scene is rendered into this texture
+	ID3D11ShaderResourceView*	gRefractionSRV = nullptr;           // --"-- For reading the texture in shaders
+	ID3D11RenderTargetView*		gRefractionRenderTarget = nullptr;  // --"-- For writing to the texture as a render target
 
 	//***************************
 	//--------------------------------------------------------------------------------------
@@ -113,6 +113,6 @@ public:
 	//--------------------------------------------------------------------------------------
 	TextureManager();
 	bool LoadTextures();
-	bool CreateTextures(HWND &hWnd);
+	bool CreateTextures();
 	void ReleaseTextures();
 };

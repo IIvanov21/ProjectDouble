@@ -40,7 +40,28 @@ CVector2& CVector2::operator+ ()
     return *this;
 }
 
+CVector2& CVector2::operator*= (float s)
+{
+    x *= s;
+    y *= s;
+    return *this;
+}
 
+// Vector-scalar multiplication
+CVector2 operator* (const CVector2& v, float s)
+{
+    return { v.x * s, v.y * s };
+}
+CVector2 operator* (float s, const CVector2& v)
+{
+    return { v.x * s, v.y * s };
+}
+
+// Vector-scalar division
+CVector2 operator/ (const CVector2& v, float s)
+{
+    return { v.x / s, v.y / s };
+}
 // Vector-vector addition
 CVector2 operator+ (const CVector2& v, const CVector2& w)
 {

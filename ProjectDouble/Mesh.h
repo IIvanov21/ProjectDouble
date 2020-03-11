@@ -26,6 +26,9 @@ public:
     // Optionally request tangents to be calculated (for normal and parallax mapping - see later lab)
     // Will throw a std::runtime_error exception on failure (since constructors can't return errors).
     Mesh(const std::string& fileName, bool requireTangents = false);
+	Mesh(CVector3 minPt, CVector3 maxPt, int subDivX, int subDivZ, bool normals = false, bool uvs = true);
+
+
     ~Mesh();
 
 

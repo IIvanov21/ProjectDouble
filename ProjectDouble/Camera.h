@@ -38,7 +38,12 @@ public:
 	//-------------------------------------
 
 	// Getters / setters
-	CVector3 Position()  { return mPosition; }
+	CVector3& Position()  { return mPosition; }
+	CVector3& XAxis() { return *reinterpret_cast<CVector3*>(&mWorldMatrix.e00); }
+	CVector3& YAxis() { return *reinterpret_cast<CVector3*>(&mWorldMatrix.e10); }
+	CVector3& ZAxis() { return *reinterpret_cast<CVector3*>(&mWorldMatrix.e20); }
+	CMatrix4x4& WorldMatrix() { return mWorldMatrix; }
+
 	CVector3 Rotation()  { return mRotation;	}
 	void SetPosition(CVector3 position)  { mPosition = position; }
 	void SetRotation(CVector3 rotation)  { mRotation = rotation; }

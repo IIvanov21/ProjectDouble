@@ -13,6 +13,8 @@ public:
 	float ColourMax = 1.0f;
 	const int gWholeMesh = 0;
 	const std::string MeshesMediaFolder = "./Media/Meshes/";
+	ColourRGBA gBackgroundColor = { 0.5f, 0.5f, 0.5f, 1.0f };
+
 	//==========Meshes=========//
 	Mesh* gCubeMesh;
 	Mesh* gTrollMesh;
@@ -27,6 +29,8 @@ public:
 	Mesh* gInnMesh;
 	Mesh* gWaterHouseMesh;
 	Mesh* gMainHouseMesh;
+	Mesh* gWaterMesh;
+	Mesh* gSkyMesh;
 	//========Models========//
 	Model* gFloor;
 	Model* gTeapot;
@@ -37,6 +41,8 @@ public:
 	Model* gSphere;
 	Model* gGround;
 	Model* gMainHouse;
+	Model* gWater;
+	Model* gSky;
 	struct Light
 	{
 		Model*   model;
@@ -97,6 +103,9 @@ public:
 	void CreateModels();
 	void InitialSceneSetup();
 	void CreateCameras();
+	void RenderDefaultModels(TextureManager* GetTexture);
+	void RenderLights(TextureManager* GetTexture);
+	void GetCamera(Camera* camera);
 	void PrepareRenderModels(ID3D11DeviceContext* gD3DContext, TextureManager *GetTexture);
 	void UpdateModels(float &frameTime, PerFrameConstants &gPerFrameConstants);
 };

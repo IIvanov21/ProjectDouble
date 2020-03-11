@@ -26,9 +26,9 @@ const float MOVEMENT_SPEED = 50.0f;
 
 
 
-CVector3 gAmbientColour = { 0.2f, 0.2f, 0.3f }; 
+CVector3 gAmbientColour = { 0.5f, 0.5f, 0.5f }; 
 float    gSpecularPower = 256; 
-ColourRGBA gBackgroundColor = { 0.2f, 0.2f, 0.3f , 1.0f };
+ColourRGBA gBackgroundColor = { 0.5f, 0.5f, 0.5f , 1.0f };
 
 //Objects declaration
 ModelManager* ModelCreator = new ModelManager();//Models and Meshes controller 
@@ -72,6 +72,10 @@ bool InitGeometry()
     }
 
 
+	TextureCreator->LoadTextures();
+
+	TextureCreator->CreateTextures();
+
     //// Load / prepare textures on the GPU ////
 
     // Load textures and create DirectX objects for them
@@ -80,11 +84,6 @@ bool InitGeometry()
     // The function will fill in these pointers with usable data. The variables used here are globals found near the top of the file.
    
 
-	TextureCreator->LoadTextures();
-
-
-    //**** Create Portal Texture ****//
-	TextureCreator->CreateTextures(gHWnd);
 	
 	
 
@@ -185,21 +184,7 @@ void RenderDepthBufferFromLight(Model*Light)
 // See RenderScene function below
 void RenderSceneFromCamera(Camera* camera)
 {
-    // Set camera matrices in the constant buffer and send over to GPU
-    gPerFrameConstants.viewMatrix           = camera->ViewMatrix();
-    gPerFrameConstants.projectionMatrix     = camera->ProjectionMatrix();
-    gPerFrameConstants.viewProjectionMatrix = camera->ViewProjectionMatrix();
-    UpdateConstantBuffer(gPerFrameConstantBuffer, gPerFrameConstants);
-
-    // Indicate that the constant buffer we just updated is for use in the vertex shader (VS) and pixel shader (PS)
-    gD3DContext->VSSetConstantBuffers(0, 1, &gPerFrameConstantBuffer); // First parameter must match constant buffer number in the shader 
-    gD3DContext->PSSetConstantBuffers(0, 1, &gPerFrameConstantBuffer);
-
-
-    //// Render lit models - ground first ////
-
- 
-
+	ModelCreator->GetCamera(camera);
 	ModelCreator->PrepareRenderModels(gD3DContext, TextureCreator);
 }
 
@@ -242,11 +227,12 @@ void RenderScene()
 	gPerFrameConstants.specularPower = gSpecularPower;
 	gPerFrameConstants.cameraPosition = ModelCreator->gCamera->Position();
 
-
+	gPerFrameConstants.viewportWidth = static_cast<float>(gViewportWidth);
+	gPerFrameConstants.viewportHeight = static_cast<float>(gViewportHeight);
 
     //-------------------------------------------------------------------------
 
-
+	D3D11_VIEWPORT vp;
     //// Portal scene rendering ////
 
     // Set the portal texture and portal depth buffer as the targets for rendering
@@ -258,7 +244,7 @@ void RenderScene()
     gD3DContext->ClearDepthStencilView(TextureCreator->gPortalDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     // Setup the viewport for the portal texture size
-    D3D11_VIEWPORT vp;
+   
     vp.Width  = static_cast<FLOAT>(TextureCreator->gPortalWidth);
     vp.Height = static_cast<FLOAT>(TextureCreator->gPortalHeight);
     vp.MinDepth = 0.0f;
@@ -288,12 +274,12 @@ void RenderScene()
 	vp.TopLeftY = 0;
 	gD3DContext->RSSetViewports(1, &vp);
 
-	
+	//
 	gD3DContext->OMSetRenderTargets(0, nullptr, TextureCreator->gShadowMap1DepthStencil);
 	gD3DContext->ClearDepthStencilView(TextureCreator->gShadowMap1DepthStencil, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	RenderDepthBufferFromLight(ModelCreator->gLights[4].model);
 
-	// Render the scene from the point of view of light 2 (only depth values written)
+	//// Render the scene from the point of view of light 2 (only depth values written)
 
 	gD3DContext->OMSetRenderTargets(0, nullptr, TextureCreator->gShadowMap2DepthStencil);
 	gD3DContext->ClearDepthStencilView(TextureCreator->gShadowMap2DepthStencil, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -322,9 +308,7 @@ void RenderScene()
 	gD3DContext->RSSetViewports(1, &vp);
 
 	
-	gD3DContext->PSSetShaderResources(1, 1, &TextureCreator->gShadowMap1SRV);
-	gD3DContext->PSSetShaderResources(2, 1, &TextureCreator->gShadowMap2SRV);
-	gD3DContext->PSSetSamplers(1, 1, &gPointSampler);
+	
     
 
     // Render the scene for the main window

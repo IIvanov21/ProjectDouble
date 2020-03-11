@@ -107,6 +107,7 @@ struct WorldPositionPixelShaderInput
 // These variables must match exactly the gPerFrameConstants structure in Scene.cpp
 cbuffer PerFrameConstants : register(b0) // The b0 gives this constant buffer the number 0 - used in the C++ code
 {
+	float4x4 gCameraMatrix;         // World matrix for the camera (inverse of the ViewMatrix below)
     float4x4 gViewMatrix;
     float4x4 gProjectionMatrix;
     float4x4 gViewProjectionMatrix; // The above two matrices multiplied together to combine their effects

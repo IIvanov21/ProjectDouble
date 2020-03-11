@@ -174,9 +174,6 @@
     <FxCompile Include="Shaders\TransformLighting_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="TintedTexture_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\BasicTransformWorldPos_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
@@ -199,6 +196,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\WaterSurface_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\TintedTexture_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

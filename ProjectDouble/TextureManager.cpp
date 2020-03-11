@@ -8,7 +8,8 @@ TextureManager::TextureManager()
 }
 bool TextureManager::LoadTextures()// Load all textures from image
 {
-	if (!LoadTexture(TextureMediaFolder + "StoneDiffuseSpecular.dds", &gStoneDiffuseSpecularMap, &gStoneDiffuseSpecularMapSRV) ||
+	if (!LoadTexture(TextureMediaFolder + "CubeMapB.jpg", &gSkyDiffuseSpecularMap, &gSkyDiffuseSpecularMapSRV) ||
+		!LoadTexture(TextureMediaFolder + "StoneDiffuseSpecular.dds", &gStoneDiffuseSpecularMap, &gStoneDiffuseSpecularMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "Moogle.png", &gDecalDiffuseSpecularMap, &gDecalDiffuseSpecularMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "CargoA.dds", &gCrateDiffuseSpecularMap, &gCrateDiffuseSpecularMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "Brick1.jpg", &gBrickDiffuseSpecularMap, &gBrickDiffuseSpecularMapSRV) ||
@@ -18,7 +19,8 @@ bool TextureManager::LoadTextures()// Load all textures from image
 		!LoadTexture(TextureMediaFolder + "WoodDiffuseSpecular.dds", &gWoodSpecularDiffuseMap, &gWoodSpecularDiffuseMapSRV)||
 		!LoadTexture(TextureMediaFolder + "TrollDiffuseSpecular.dds", &gTrollSpecularDiffuseMap,&gTrollSpecularDiffuseMapSRV)||
 		!LoadTexture(TextureMediaFolder + "tv.dds", &gTVDiffuseSpecularMap,&gTVDiffuseSpecularMapSRV) ||
-		!LoadTexture(TextureMediaFolder +"greyTexture.jpg", &gGreyDiffuseSpecularMap, &gGreyDiffuseSpecularMapSRV))
+		!LoadTexture(TextureMediaFolder + "greyTexture.jpg", &gGreyDiffuseSpecularMap, &gGreyDiffuseSpecularMapSRV)||
+		!LoadTexture(TextureMediaFolder + "WaterNormalHeight.png", &gWaterNormalMap, &gWaterNormalMapSRV))
 	{
 		gLastError = "Error loading textures";
 		return false;
@@ -27,79 +29,11 @@ bool TextureManager::LoadTextures()// Load all textures from image
 
 }
 
-bool TextureManager::CreateTextures(HWND &hWnd)//Create all textures that are not laoded from image file
+bool TextureManager::CreateTextures()//Create all textures that are not laoded from image file
 {
 	HRESULT hr = S_OK;
 
-	portalDesc.Width = gPortalWidth;  // Size of the portal texture determines its quality
-	portalDesc.Height = gPortalHeight;
-	portalDesc.MipLevels = 1; // No mip-maps when rendering to textures (or we would have to render every level)
-	portalDesc.ArraySize = 1;
-	portalDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
-	portalDesc.SampleDesc.Count = 1;
-	portalDesc.SampleDesc.Quality = 0;
-	portalDesc.Usage = D3D11_USAGE_DEFAULT;
-	portalDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE; // IMPORTANT: Indicate we will use texture as render target, and pass it to shaders
-	portalDesc.CPUAccessFlags = 0;
-	portalDesc.MiscFlags = 0;
-	if (FAILED(gD3DDevice->CreateTexture2D(&portalDesc, NULL, &gPortalTexture)))
-	{
-		gLastError = "Error creating portal texture";
-		return false;
-	}
 
-	// We created the portal texture above, now we get a "view" of it as a render target, i.e. get a special pointer to the texture that
-	// we use when rendering to it (see RenderScene function below)
-	if (FAILED(gD3DDevice->CreateRenderTargetView(gPortalTexture, NULL, &gPortalRenderTarget)))
-	{
-		gLastError = "Error creating portal render target view";
-		return false;
-	}
-
-	// We also need to send this texture (resource) to the shaders. To do that we must create a shader-resource "view"
-	srDesc.Format = portalDesc.Format;
-	srDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srDesc.Texture2D.MostDetailedMip = 0;
-	srDesc.Texture2D.MipLevels = 1;
-	if (FAILED(gD3DDevice->CreateShaderResourceView(gPortalTexture, &srDesc, &gPortalTextureSRV)))
-	{
-		gLastError = "Error creating portal shader resource view";
-		return false;
-	}
-
-
-	//**** Create Portal Depth Buffer ****//
-
-	// We also need a depth buffer to go with our portal
-	//**** This depth buffer can be shared with any other portals of the same size
-	portalDesc = {};
-	portalDesc.Width = gPortalWidth;
-	portalDesc.Height = gPortalHeight;
-	portalDesc.MipLevels = 1;
-	portalDesc.ArraySize = 1;
-	portalDesc.Format = DXGI_FORMAT_D32_FLOAT; // Depth buffers contain a single float per pixel
-	portalDesc.SampleDesc.Count = 1;
-	portalDesc.SampleDesc.Quality = 0;
-	portalDesc.Usage = D3D11_USAGE_DEFAULT;
-	portalDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
-	portalDesc.CPUAccessFlags = 0;
-	portalDesc.MiscFlags = 0;
-	if (FAILED(gD3DDevice->CreateTexture2D(&portalDesc, NULL, &gPortalDepthStencil)))
-	{
-		gLastError = "Error creating portal depth stencil texture";
-		return false;
-	}
-
-	// Create the depth stencil view, i.e. indicate that the texture just created is to be used as a depth buffer
-	portalDescDSV.Format = portalDesc.Format;
-	portalDescDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	portalDescDSV.Texture2D.MipSlice = 0;
-	portalDescDSV.Flags = 0;
-	if (FAILED(gD3DDevice->CreateDepthStencilView(gPortalDepthStencil, &portalDescDSV, &gPortalDepthStencilView)))
-	{
-		gLastError = "Error creating portal depth stencil view";
-		return false;
-	}
 	//Shadows
 	ShadowDesc = {};
 	ShadowDesc.Width = gShadowMapSize; // Size of the shadow map determines quality / resolution of shadows
@@ -167,78 +101,170 @@ bool TextureManager::CreateTextures(HWND &hWnd)//Create all textures that are no
 	//**************************************
 	// Water Rendering Resources
 	//**************************************
-	// Create a texture to use for a depth buffer
-	RECT rc;
-	GetClientRect(hWnd, &rc);
-	ViewportWidth = rc.right - rc.left;
-	ViewportHeight = rc.bottom - rc.top;
-	WaterDesc = { 0 };
-	WaterDesc.Width = ViewportWidth;
-	WaterDesc.Height = ViewportHeight;
-	WaterDesc.MipLevels = 1;
-	WaterDesc.ArraySize = 1;
-	WaterDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	WaterDesc.SampleDesc.Count = 1;
-	WaterDesc.SampleDesc.Quality = 0;
-	WaterDesc.Usage = D3D11_USAGE_DEFAULT;
-	WaterDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	WaterDesc.CPUAccessFlags = 0;
-	WaterDesc.MiscFlags = 0;
-	hr = gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &gWaterTexture);
-	if (FAILED(hr)) return false;
+	// Using a helper function to load textures from files above. Here we create the scene texture manually
+	// as we are creating a special kind of texture (one that we can render to). Many settings to prepare:
+	gWaterDesc = {};
+	gWaterDesc.Width = gViewportWidth;  // Reflection / refraction / water surface textures are full screen size - could experiment with making them smaller
+	gWaterDesc.Height = gViewportHeight;
+	gWaterDesc.MipLevels = 1; // No mip-maps when rendering to textures (or we would have to render every level)
+	gWaterDesc.ArraySize = 1;
+	gWaterDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
+	gWaterDesc.SampleDesc.Count = 1;
+	gWaterDesc.SampleDesc.Quality = 0;
+	gWaterDesc.Usage = D3D11_USAGE_DEFAULT;
+	gWaterDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE; // IMPORTANT: Indicate we will use texture as render target, and pass it to shaders
+	gWaterDesc.CPUAccessFlags = 0;
+	gWaterDesc.MiscFlags = 0;
+	if (FAILED(gD3DDevice->CreateTexture2D(&gWaterDesc, NULL, &gReflection)))
+	{
+		gLastError = "Error creating reflection texture";
+		return false;
+	}
 
-	// Get a "view" of the texture as a depth buffer - giving us an interface for to select this texture as the depth target (e.g. for the OMSetRenderTargets function)
-	hr = gD3DDevice->CreateDepthStencilView(gWaterTexture, NULL, &gDepthStencil);
-	if (FAILED(hr)) return false;
-	// Create a refraction texture - everything *below* the water will be rendered into this
-	// Reuse WaterTextureDesc structure from above, most of the settings are the same
-	WaterDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
-	WaterDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE; // Indicate we will use texture as render target, and pass it to shaders
-	if (FAILED(gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &RefractionTexture)))  return false;
+	// We created the relection texture above, now we get a "view" of it as a render target, i.e. get a special pointer to the texture that we use when rendering to it
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gReflection, NULL, &gReflectionRenderTarget)))
+	{
+		gLastError = "Error creating reflection render target view";
+		return false;
+	}
 
-	// Get a "view" of the texture as a render target - giving us an interface for rendering to the texture (e.g. in the OMSetRenderTargets function)
-	if (FAILED(gD3DDevice->CreateRenderTargetView(RefractionTexture, NULL, &RefractionRenderTarget)))  return false;
-
-	// And get a shader-resource "view" - giving us an interface for passing the texture to shaders (e.g. in the SetResource function)
-	if (FAILED(gD3DDevice->CreateShaderResourceView(RefractionTexture, NULL, &RefractionShaderResource)))  return false;
-
-	//----
-
-	  // Create a reflection texture - everything *above* the water will be rendered into this, same process as above
-	if (FAILED(gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &ReflectionTexture))) return false;
-	if (FAILED(gD3DDevice->CreateRenderTargetView(ReflectionTexture, NULL, &ReflectionRenderTarget))) return false;
-	if (FAILED(gD3DDevice->CreateShaderResourceView(ReflectionTexture, NULL, &ReflectionShaderResource))) return false;
-
-	//----
-
-	// Create a water depth buffer texture - distance from camera to water surface is rendered into this (in world units, not 0->1 range)
-	  // This allows us to test what is above, and what is below the water. Works for non-flat water unlike the more
-	  // common approaches using flat "clip planes". Note: this is a depth buffer for the water, not how deep the water is
-	WaterDesc.Format = DXGI_FORMAT_R32_FLOAT; // A single floating point value
-	if (FAILED(gD3DDevice->CreateTexture2D(&WaterDesc, NULL, &WaterHeightTexture))) return false;
-	if (FAILED(gD3DDevice->CreateRenderTargetView(WaterHeightTexture, NULL, &WaterHeightRenderTarget))) return false;
-	if (FAILED(gD3DDevice->CreateShaderResourceView(WaterHeightTexture, NULL, &WaterHeightShaderResource))) return false;
+	// We also need to send this texture (resource) to the shaders. To do that we must create a shader-resource "view"
+	gWaterShaderDesc = {};
+	gWaterShaderDesc.Format = gWaterDesc.Format;
+	gWaterShaderDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	gWaterShaderDesc.Texture2D.MostDetailedMip = 0;
+	gWaterShaderDesc.Texture2D.MipLevels = 1;
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gReflection, &gWaterShaderDesc, &gReflectionSRV)))
+	{
+		gLastError = "Error creating reflection shader resource view";
+		return false;
+	}
 
 
-	//**************************************
 
-	return true;
+	// Same again for refraction texture. Structures already set up so can save a few lines
+	if (FAILED(gD3DDevice->CreateTexture2D(&gWaterDesc, NULL, &gRefraction)))
+	{
+		gLastError = "Error creating refraction texture";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gRefraction, NULL, &gRefractionRenderTarget)))
+	{
+		gLastError = "Error creating refraction render target view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gRefraction, &gWaterShaderDesc, &gRefractionSRV)))
+	{
+		gLastError = "Error creating refraction shader resource view";
+		return false;
+	}
+
+
+	// Same again for the water height texture.
+	gWaterDesc.Format = gWaterShaderDesc.Format = DXGI_FORMAT_R32_FLOAT; // Water surface height is just one value per pixel - so texture only needs red channel using a 32-bit float
+	if (FAILED(gD3DDevice->CreateTexture2D(&gWaterDesc, NULL, &gWaterHeight)))
+	{
+		gLastError = "Error creating water height texture";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gWaterHeight, NULL, &gWaterHeightRenderTarget)))
+	{
+		gLastError = "Error creating water height render target view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gWaterHeight, &gWaterShaderDesc, &gWaterHeightSRV)))
+	{
+		gLastError = "Error creating water height shader resource view";
+		return false;
+	}
+	//PortalTexture
+	portalDesc.Width = gPortalWidth;  // Size of the portal texture determines its quality
+	portalDesc.Height = gPortalHeight;
+	portalDesc.MipLevels = 1; // No mip-maps when rendering to textures (or we would have to render every level)
+	portalDesc.ArraySize = 1;
+	portalDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
+	portalDesc.SampleDesc.Count = 1;
+	portalDesc.SampleDesc.Quality = 0;
+	portalDesc.Usage = D3D11_USAGE_DEFAULT;
+	portalDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE; // IMPORTANT: Indicate we will use texture as render target, and pass it to shaders
+	portalDesc.CPUAccessFlags = 0;
+	portalDesc.MiscFlags = 0;
+	if (FAILED(gD3DDevice->CreateTexture2D(&portalDesc, NULL, &gPortalTexture)))
+	{
+		gLastError = "Error creating portal texture";
+		return false;
+	}
+
+	// We created the portal texture above, now we get a "view" of it as a render target, i.e. get a special pointer to the texture that
+	// we use when rendering to it (see RenderScene function below)
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gPortalTexture, NULL, &gPortalRenderTarget)))
+	{
+		gLastError = "Error creating portal render target view";
+		return false;
+	}
+
+	// We also need to send this texture (resource) to the shaders. To do that we must create a shader-resource "view"
+	srDesc.Format = portalDesc.Format;
+	srDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srDesc.Texture2D.MostDetailedMip = 0;
+	srDesc.Texture2D.MipLevels = 1;
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gPortalTexture, &srDesc, &gPortalTextureSRV)))
+	{
+		gLastError = "Error creating portal shader resource view";
+		return false;
+	}
+
+
+	//**** Create Portal Depth Buffer ****
+
+	// We also need a depth buffer to go with our portal
+	//**** This depth buffer can be shared with any other portals of the same size
+	portalDesc = {};
+	portalDesc.Width = gPortalWidth;
+	portalDesc.Height = gPortalHeight;
+	portalDesc.MipLevels = 1;
+	portalDesc.ArraySize = 1;
+	portalDesc.Format = DXGI_FORMAT_D32_FLOAT; // Depth buffers contain a single float per pixel
+	portalDesc.SampleDesc.Count = 1;
+	portalDesc.SampleDesc.Quality = 0;
+	portalDesc.Usage = D3D11_USAGE_DEFAULT;
+	portalDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+	portalDesc.CPUAccessFlags = 0;
+	portalDesc.MiscFlags = 0;
+	if (FAILED(gD3DDevice->CreateTexture2D(&portalDesc, NULL, &gPortalDepthStencil)))
+	{
+		gLastError = "Error creating portal depth stencil texture";
+		return false;
+	}
+
+	// Create the depth stencil view, i.e. indicate that the texture just created is to be used as a depth buffer
+	portalDescDSV.Format = portalDesc.Format;
+	portalDescDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	portalDescDSV.Texture2D.MipSlice = 0;
+	portalDescDSV.Flags = 0;
+	if (FAILED(gD3DDevice->CreateDepthStencilView(gPortalDepthStencil, &portalDescDSV, &gPortalDepthStencilView)))
+	{
+		gLastError = "Error creating portal depth stencil view";
+		return false;
+	}
 	return true;
 }
 
 void TextureManager::ReleaseTextures()//Release all texture and prepare for use
 {
-	if (gWaterDepthStencil)gWaterDepthStencil->Release();
-	if (gWaterTexture)gWaterTexture->Release();
-	if (WaterHeightShaderResource)WaterHeightShaderResource->Release();
-	if (WaterHeightRenderTarget)WaterHeightRenderTarget->Release();
-	if (WaterHeightTexture)WaterHeightTexture->Release();
-	if (ReflectionShaderResource)  ReflectionShaderResource->Release();
-	if (ReflectionRenderTarget)    ReflectionRenderTarget->Release();
-	if (ReflectionTexture)         ReflectionTexture->Release();
-	if (RefractionShaderResource)  RefractionShaderResource->Release();
-	if (RefractionRenderTarget)    RefractionRenderTarget->Release();
-	if (RefractionTexture)         RefractionTexture->Release();
+	if (gSkyDiffuseSpecularMapSRV)     gSkyDiffuseSpecularMapSRV->Release();
+	if (gSkyDiffuseSpecularMap)        gSkyDiffuseSpecularMap->Release();
+	if (gWaterNormalMap         ) gWaterNormalMap->Release();
+	if (gWaterNormalMapSRV      ) gWaterNormalMapSRV->Release();
+	if (gWaterHeight            ) gWaterHeight->Release();
+	if (gWaterHeightSRV         ) gWaterHeightSRV->Release();
+	if (gWaterHeightRenderTarget) gWaterHeightRenderTarget->Release();
+	if (gReflection             ) gReflection->Release();
+	if (gReflectionSRV          ) gReflectionSRV->Release();
+	if (gReflectionRenderTarget ) gReflectionRenderTarget->Release();
+	if (gRefraction             ) gRefraction->Release();
+	if (gRefractionSRV          ) gRefractionSRV->Release();
+	if (gRefractionRenderTarget ) gRefractionRenderTarget->Release();
 
 
 	if (gPortalDepthStencilView)  gPortalDepthStencilView->Release();

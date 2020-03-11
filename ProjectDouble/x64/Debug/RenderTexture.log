@@ -1,12 +1,2 @@
-﻿  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\BasicTransformWorldPos_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\BasicTransform_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\DepthOnly_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\LerpShader_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\LerpShader_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\LightModel_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\LightModel_vs.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\PixelLighting_ps.cso
-  compilation object save succeeded; see D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\PixelLighting_vs.cso
-D:\Users\IIvanov\Documents\GitHub\ProjectDouble\ProjectDouble\Shaders\ReflectedPixelLighting_ps.hlsl(32,45-55): error X4502: invalid vs_5_0 output semantic 'SV_Target'
-  
-  compilation failed; no code produced
+﻿  ModelsAndMeshes.cpp
+  RenderTexture.vcxproj -> C:\Users\callt\Documents\GitHub\ProjectDouble\ProjectDouble\\RenderTexture.exe

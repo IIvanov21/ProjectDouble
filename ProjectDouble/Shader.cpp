@@ -27,6 +27,18 @@ ID3D11VertexShader* gShadowMappingVertexShader = nullptr;
 ID3D11PixelShader* gShadowMappingPixelShader = nullptr;
 ID3D11PixelShader*  gDepthOnlyPixelShader = nullptr;
 ID3D11VertexShader* gBasicTransformVertexShader = nullptr; 
+ID3D11PixelShader* gTintedTexturePixelShader = nullptr;
+
+// Water shaders
+
+ID3D11VertexShader* gBasicTransformWorldPosVertexShader = nullptr;
+ID3D11VertexShader* gWaterSurfaceVertexShader = nullptr;
+ID3D11PixelShader* gWaterSurfacePixelShader = nullptr;
+ID3D11PixelShader* gWaterHeightPixelShader = nullptr;
+ID3D11PixelShader* gReflectedPixelLightingPixelShader = nullptr;
+ID3D11PixelShader* gReflectedTintedTexturePixelShader = nullptr;
+ID3D11PixelShader* gRefractedPixelLightingPixelShader = nullptr;
+ID3D11PixelShader* gRefractedTintedTexturePixelShader = nullptr;
 
 //--------------------------------------------------------------------------------------
 // Shader creation / destruction
@@ -50,17 +62,27 @@ bool LoadShaders()
 	gShadowMappingVertexShader = LoadVertexShader(".\\Shaders\\ShadowMapping_vs");
 	gBasicTransformVertexShader = LoadVertexShader(".\\Shaders\\BasicTransform_vs");
 	gDepthOnlyPixelShader = LoadPixelShader(".\\Shaders\\DepthOnly_ps");
+    gTintedTexturePixelShader = LoadPixelShader(".\\Shaders\\TintedTexture_ps");
+
 	if (gPixelLightingVertexShader == nullptr || gPixelLightingPixelShader == nullptr ||
 		gLightModelVertexShader == nullptr || gLightModelPixelShader == nullptr ||
 		gTransformLightModelVertexShader == nullptr || gTransformLightModelPixelShader == nullptr ||
 		gLerpPixelShader == nullptr || gLerpVertexShader == nullptr ||
 		gShadowMappingVertexShader == nullptr || gShadowMappingPixelShader == nullptr ||
-		gBasicTransformVertexShader == nullptr || gDepthOnlyPixelShader == nullptr)
+		gBasicTransformVertexShader == nullptr || gDepthOnlyPixelShader == nullptr ||
+        gTintedTexturePixelShader == nullptr)
     {
         gLastError = "Error loading shaders";
         return false;
     }
-
+    gBasicTransformWorldPosVertexShader = LoadVertexShader(".\\Shaders\\BasicTransformWorldPos_vs");
+    gWaterSurfaceVertexShader = LoadVertexShader(".\\Shaders\\WaterSurface_vs");
+    gWaterSurfacePixelShader = LoadPixelShader(".\\Shaders\\WaterSurface_ps");
+    gWaterHeightPixelShader = LoadPixelShader(".\\Shaders\\WaterHeight_ps");
+    gReflectedPixelLightingPixelShader = LoadPixelShader(".\\Shaders\\ReflectedPixelLighting_ps");
+    gReflectedTintedTexturePixelShader = LoadPixelShader(".\\Shaders\\ReflectedTintedTexture_ps");
+    gRefractedPixelLightingPixelShader = LoadPixelShader(".\\Shaders\\RefractedPixelLighting_ps");
+    gRefractedTintedTexturePixelShader = LoadPixelShader(".\\Shaders\\RefractedTintedTexture_ps");
     return true;
 }
 
@@ -79,6 +101,16 @@ void ReleaseShaders()
 	if (gShadowMappingPixelShader)gShadowMappingPixelShader->Release();
 	if (gDepthOnlyPixelShader)        gDepthOnlyPixelShader->Release();
 	if (gBasicTransformVertexShader)  gBasicTransformVertexShader->Release();
+    if (gTintedTexturePixelShader)  gTintedTexturePixelShader->Release();
+
+    if (gBasicTransformWorldPosVertexShader)  gBasicTransformWorldPosVertexShader->Release();
+    if (gWaterSurfaceVertexShader)  gWaterSurfaceVertexShader->Release();
+    if (gWaterSurfacePixelShader)  gWaterSurfacePixelShader->Release();
+    if (gWaterHeightPixelShader)  gWaterHeightPixelShader->Release();
+    if (gReflectedPixelLightingPixelShader)  gReflectedPixelLightingPixelShader->Release();
+    if (gReflectedTintedTexturePixelShader)  gReflectedTintedTexturePixelShader->Release();
+    if (gRefractedPixelLightingPixelShader)  gRefractedPixelLightingPixelShader->Release();
+    if (gRefractedTintedTexturePixelShader)  gRefractedTintedTexturePixelShader->Release();
 }
 
 
