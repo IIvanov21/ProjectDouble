@@ -6,6 +6,7 @@
 #define _MATH_HELPERS_H_DEFINED_
 
 #include <cmath>
+#include <stdint.h>
 
 
 // Surprisingly, pi is not *officially* defined anywhere in C++
@@ -30,16 +31,44 @@ inline float InvSqrt(const float x)
 
 
 // Pass an angle in degrees, returns the angle in radians
-inline float ToRadians(float d)
+constexpr float ToRadians(float d)
 {
     return  d * PI / 180.0f;
 }
 
 // Pass an angle in radians, returns the angle in degrees
-inline float ToDegrees(float r)
+constexpr float ToDegrees(float r)
 {
     return  r * 180.0f / PI;
 }
 
+
+
+// Return random integer from a to b (inclusive)
+// Can only return up to RAND_MAX different values, spread evenly across the given range
+// RAND_MAX is defined in stdlib.h and is compiler-specific (32767 on VS-2005, higher elsewhere)
+inline uint32_t Random(const uint32_t a, const uint32_t b)
+{
+	// Could just use a + rand() % (b-a), but using a more complex form to allow range
+	// to exceed RAND_MAX and still return values spread across the range
+	uint32_t t = (b - a + 1) * rand();
+	return t == 0 ? a : a + (t - 1) / RAND_MAX;
+}
+
+// Return random 32-bit float from a to b (inclusive)
+// Can only return up to RAND_MAX different values, spread evenly across the given range
+// RAND_MAX is defined in stdlib.h and is compiler-specific (32767 on VS-2005, higher elsewhere)
+inline float Random(const float a, const float b)
+{
+	return a + (b - a) * (static_cast<float>(rand()) / RAND_MAX);
+}
+
+// Return random 64-bit float from a to b (inclusive)
+// Can only return up to RAND_MAX different values, spread evenly across the given range
+// RAND_MAX is defined in stdlib.h and is compiler-specific (32767 on VS-2005, higher elsewhere)
+inline double Random(const double a, const double b)
+{
+	return a + (b - a) * (static_cast<double>(rand()) / RAND_MAX);
+}
 
 #endif // _MATH_HELPERS_H_DEFINED_

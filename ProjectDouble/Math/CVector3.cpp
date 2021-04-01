@@ -44,36 +44,77 @@ CVector3& CVector3::operator+ ()
 
 
 // Multiply vector by scalar (scales vector);
-CVector3& CVector3::operator*= (const float s)
+CVector3& CVector3::operator*= (float s)
 {
     x *= s;
     y *= s;
     z *= s;
     return *this;
 }
+// Divide vector by scalar (scales vector);
+CVector3& CVector3::operator/= (float s)
+{
+    x /= s;
+    y /= s;
+    z /= s;
+    return *this;
+}
+float CVector3::DistanceTo(const CVector3& p)
+{
+    float distX = p.x - x;
+    float distY = p.y - y;
+    float distZ = p.z - z;
+    return gen::Sqrt(distX * distX + distY * distY + distZ * distZ);
+}
+float CVector3::DistanceToSquared(const CVector3& p)
+{
+    float distX = p.x - x;
+    float distY = p.y - y;
+    float distZ = p.z - z;
+    return distX * distX + distY * distY + distZ * distZ;
+}
 
 
+// Return distance from one point to another - non-member version
+float Distance
+(
+    const CVector3& p1,
+    const CVector3& p2
+)
+{
+    float distX = p1.x - p2.x;
+    float distY = p1.y - p2.y;
+    float distZ = p1.z - p2.z;
+    return gen::Sqrt(distX * distX + distY * distY + distZ * distZ);
+}
 // Vector-vector addition
 CVector3 operator+ (const CVector3& v, const CVector3& w)
 {
-    return CVector3{ v.x + w.x, v.y + w.y, v.z + w.z };
+    return { v.x + w.x, v.y + w.y, v.z + w.z };
 }
 
 // Vector-vector subtraction
 CVector3 operator- (const CVector3& v, const CVector3& w)
 {
-    return CVector3{ v.x - w.x, v.y - w.y, v.z - w.z };
+    return { v.x - w.x, v.y - w.y, v.z - w.z };
 }
 
 // Vector-scalar multiplication
 CVector3 operator* (const CVector3& v, float s)
 {
-    return CVector3{ v.x * s, v.y * s, v.z * s };
+    return { v.x * s, v.y * s, v.z * s };
 }
 CVector3 operator* (float s, const CVector3& v)
 {
-    return CVector3{ v.x * s, v.y * s, v.z * s };
+    return { v.x * s, v.y * s, v.z * s };
 }
+
+// Vector-scalar division
+CVector3 operator/ (const CVector3& v, float s)
+{
+    return { v.x / s, v.y / s, v.z / s };
+}
+
 
 /*-----------------------------------------------------------------------------------------
     Non-member functions
@@ -88,7 +129,7 @@ float Dot(const CVector3& v1, const CVector3& v2)
 // Cross product of two given vectors (order is important) - non-member version
 CVector3 Cross(const CVector3& v1, const CVector3& v2)
 {
-    return CVector3{ v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x };
+    return { v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x };
 }
 
 // Return unit length vector in the same direction as given one
@@ -99,12 +140,12 @@ CVector3 Normalise(const CVector3& v)
     // Ensure vector is not zero length (use BaseMath.h float approx. fn with default epsilon)
     if (IsZero(lengthSq))
     {
-        return CVector3{ 0.0f, 0.0f, 0.0f };
+        return { 0.0f, 0.0f, 0.0f };
     }
     else
     {
         float invLength = InvSqrt(lengthSq);
-        return CVector3{ v.x * invLength, v.y * invLength, v.z * invLength };
+        return { v.x * invLength, v.y * invLength, v.z * invLength };
     }
 }
 

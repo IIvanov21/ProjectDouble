@@ -40,11 +40,25 @@ CVector2& CVector2::operator+ ()
     return *this;
 }
 
+// Multiply vector by scalar (scales vector);
 CVector2& CVector2::operator*= (float s)
 {
     x *= s;
     y *= s;
     return *this;
+}
+
+
+// Vector-vector addition
+CVector2 operator+ (const CVector2& v, const CVector2& w)
+{
+    return { v.x + w.x, v.y + w.y };
+}
+
+// Vector-vector subtraction
+CVector2 operator- (const CVector2& v, const CVector2& w)
+{
+    return { v.x - w.x, v.y - w.y };
 }
 
 // Vector-scalar multiplication
@@ -61,17 +75,6 @@ CVector2 operator* (float s, const CVector2& v)
 CVector2 operator/ (const CVector2& v, float s)
 {
     return { v.x / s, v.y / s };
-}
-// Vector-vector addition
-CVector2 operator+ (const CVector2& v, const CVector2& w)
-{
-    return CVector2{ v.x + w.x, v.y + w.y };
-}
-
-// Vector-vector subtraction
-CVector2 operator- (const CVector2& v, const CVector2& w)
-{
-    return CVector2{ v.x - w.x, v.y - w.y };
 }
 
 
@@ -93,11 +96,23 @@ CVector2 Normalise(const CVector2& v)
     // Ensure vector is not zero length (use function from MathHelpersh.h to check if float is approximately 0)
     if (IsZero(lengthSq))
     {
-        return CVector2{ 0.0f, 0.0f };
+        return { 0.0f, 0.0f };
     }
     else
     {
         float invLength = InvSqrt(lengthSq);
-        return CVector2{ v.x * invLength, v.y * invLength };
+        return { v.x * invLength, v.y * invLength };
     }
+}
+
+// Return distance from one point to another - non-member version
+float Distance
+(
+    const CVector2& p1,
+    const CVector2& p2
+)
+{
+    float distX = p1.x - p2.x;
+    float distY = p1.y - p2.y;
+    return gen::Sqrt(distX * distX + distY * distY);
 }

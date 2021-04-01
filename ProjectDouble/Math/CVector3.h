@@ -5,7 +5,7 @@
 
 #ifndef _CVECTOR3_H_DEFINED_
 #define _CVECTOR3_H_DEFINED_
-
+#include "BaseMath.h"
 #include "MathHelpers.h"
 #include <cmath>
 
@@ -34,14 +34,17 @@ public:
 	}
 	
     // Construct using a pointer to three floats
-    CVector3(const float* pfElts)
+    CVector3(const float* elts)
     {
-        x = pfElts[0];
-        y = pfElts[1];
-        z = pfElts[2];
+        x = elts[0];
+        y = elts[1];
+        z = elts[2];
     }
 
-
+    bool IsZero() const
+    {
+        return gen::IsZero(x * x + y * y + z * z);
+    }
     /*-----------------------------------------------------------------------------------------
         Member functions
     -----------------------------------------------------------------------------------------*/
@@ -59,7 +62,18 @@ public:
     CVector3& operator+ ();
 
     // Multiply vector by scalar (scales vector);
-    CVector3& operator*= (const float s);
+    CVector3& operator*= (float s);
+
+	// Divide vector by scalar (scales vector);
+    CVector3& operator/= (float s);
+
+    // Return distance from this point to another
+    float DistanceTo(const CVector3& p);
+
+    // Return squared distance from this point to another
+    // More efficient than Distance when exact length is not required (e.g. for comparisons)
+    // Use InvSqrt( DistanceToSquared(...) ) to calculate 1 / distance more efficiently
+    float DistanceToSquared(const CVector3& p);
 };
 	
 
@@ -73,9 +87,11 @@ CVector3 operator+ (const CVector3& v, const CVector3& w);
 // Vector-vector subtraction
 CVector3 operator- (const CVector3& v, const CVector3& w);
 
-// Vector-scalar multiplication
+// Vector-scalar multiplication & division
 CVector3 operator* (const CVector3& v, float s);
 CVector3 operator* (float s, const CVector3& v);
+CVector3 operator/ (const CVector3& v, float s);
+
 
 /*-----------------------------------------------------------------------------------------
     Non-member functions
@@ -92,6 +108,7 @@ CVector3 Normalise(const CVector3& v);
 
 // Returns length of a vector
 float Length(const CVector3& v);
+
 
 
 #endif // _CVECTOR3_H_DEFINED_

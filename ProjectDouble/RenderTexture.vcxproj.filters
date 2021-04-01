@@ -22,9 +22,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="ModelsAndMeshes.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -40,6 +37,24 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Common\CFatalException.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\CHashTable.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\CTimer.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\MSDefines.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Utility.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\BaseMath.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
     <ClCompile Include="Math\CMatrix4x4.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -48,6 +63,15 @@
     </ClCompile>
     <ClCompile Include="Math\CVector3.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\CVector4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +105,6 @@
     <ClInclude Include="Model.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ModelsAndMeshes.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -96,6 +117,30 @@
     <ClInclude Include="TextureManager.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Common\CFatalException.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\CHashTable.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\CTimer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Defines.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Error.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\MSDefines.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Utility.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\BaseMath.h">
+      <Filter>Math</Filter>
+    </ClInclude>
     <ClInclude Include="Math\CMatrix4x4.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -105,8 +150,20 @@
     <ClInclude Include="Math\CVector3.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\CVector4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
     <ClInclude Include="Math\MathHelpers.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundClass.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,23 +173,20 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{1d198607-cf52-46a9-8994-554d241d97a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Math">
-      <UniqueIdentifier>{739716ac-bd96-4e4c-b3a2-61c7fdfdea4e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headers">
       <UniqueIdentifier>{1c63cd6b-fcc4-4268-9dfc-8bedc0b2f475}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources">
       <UniqueIdentifier>{5c54da8c-0c86-4ee1-9874-53adf2f86a35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{5170d72c-e07b-47a0-b2c0-f36f29c281e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{0e2ac8aa-7800-4f9f-ae00-617875435a98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Portal_ps.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Portal_vs.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\Common.hlsli">
       <Filter>Shaders</Filter>
     </None>
@@ -165,15 +219,6 @@
     <FxCompile Include="Shaders\ShadowMapping_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ShadowMapping_vs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\TransformLighting_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\TransformLighting_vs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\BasicTransformWorldPos_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
@@ -199,6 +244,24 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\TintedTexture_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\TreeShader_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\UnderWater_pp.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\FullScreenQuad_pp.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\FinalBloom_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HorizontalBloom_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VerticalBloom_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

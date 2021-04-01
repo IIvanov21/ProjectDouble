@@ -30,8 +30,8 @@ void Model::Render()
 
 
 // Control a given node in the model using keys provided. Amount of motion performed depends on frame time
-void Model::Control(int node, float frameTime, KeyCode turnUp, KeyCode turnDown, KeyCode turnLeft, KeyCode turnRight,
-                                               KeyCode turnCW, KeyCode turnCCW, KeyCode moveForward, KeyCode moveBackward)
+void Model:: Control(int node, float frameTime, KeyCode turnUp, KeyCode turnDown, KeyCode turnLeft, KeyCode turnRight,
+	KeyCode turnCW, KeyCode turnCCW, KeyCode moveForward, KeyCode moveBackward, KeyCode moveLeft, KeyCode moveRight, KeyCode moveUp, KeyCode moveDown)
 {
     auto& matrix = mWorldMatrices[node]; // Use reference to node matrix to make code below more readable
 
@@ -71,4 +71,25 @@ void Model::Control(int node, float frameTime, KeyCode turnUp, KeyCode turnDown,
 	{
 		matrix.SetRow(3, matrix.GetRow(3) - localZDir * MOVEMENT_SPEED * frameTime);
 	}
+
+	CVector3 localXDir = Normalise(matrix.GetRow(0)); // normalise axis in case world matrix has scaling
+	if (KeyHeld(moveRight))
+	{
+		matrix.SetRow(3, matrix.GetRow(3) + localXDir * MOVEMENT_SPEED * frameTime);
+	}
+	if (KeyHeld(moveLeft))
+	{
+		matrix.SetRow(3, matrix.GetRow(3) - localXDir * MOVEMENT_SPEED * frameTime);
+	}
+
+	CVector3 localYDir = Normalise(matrix.GetRow(1)); // normalise axis in case world matrix has scaling
+	if (KeyHeld(moveUp))
+	{
+		matrix.SetRow(3, matrix.GetRow(3) + localYDir * MOVEMENT_SPEED * frameTime);
+	}
+	if (KeyHeld(moveDown))
+	{
+		matrix.SetRow(3, matrix.GetRow(3) - localYDir * MOVEMENT_SPEED * frameTime);
+	}
 }
+

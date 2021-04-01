@@ -25,7 +25,7 @@ extern ID3D11SamplerState* gBilinearMirrorSampler;
 
 extern ID3D11BlendState* gNoBlendingState;
 extern ID3D11BlendState* gAdditiveBlendingState;
-
+extern ID3D11BlendState* gAlphaBlendingState;
 extern ID3D11RasterizerState*   gCullBackState;
 extern ID3D11RasterizerState*   gCullFrontState;
 extern ID3D11RasterizerState*   gCullNoneState;

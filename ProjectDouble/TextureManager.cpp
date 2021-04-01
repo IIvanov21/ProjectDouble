@@ -8,7 +8,7 @@ TextureManager::TextureManager()
 }
 bool TextureManager::LoadTextures()// Load all textures from image
 {
-	if (!LoadTexture(TextureMediaFolder + "CubeMapB.jpg", &gSkyDiffuseSpecularMap, &gSkyDiffuseSpecularMapSRV) ||
+	if (!LoadTexture(TextureMediaFolder + "CubeMapA.jpg", &gSkyDiffuseSpecularMap, &gSkyDiffuseSpecularMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "StoneDiffuseSpecular.dds", &gStoneDiffuseSpecularMap, &gStoneDiffuseSpecularMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "Moogle.png", &gDecalDiffuseSpecularMap, &gDecalDiffuseSpecularMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "CargoA.dds", &gCrateDiffuseSpecularMap, &gCrateDiffuseSpecularMapSRV) ||
@@ -17,7 +17,7 @@ bool TextureManager::LoadTextures()// Load all textures from image
 		!LoadTexture(TextureMediaFolder + "Flare.jpg", &gLightDiffuseMap, &gLightDiffuseMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "StoneDiffuseSpecular.dds", &gTeapotSpecularDiffuseMap, &gTeapotSpecularDiffuseMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "WoodDiffuseSpecular.dds", &gWoodSpecularDiffuseMap, &gWoodSpecularDiffuseMapSRV)||
-		!LoadTexture(TextureMediaFolder + "TrollDiffuseSpecular.dds", &gTrollSpecularDiffuseMap,&gTrollSpecularDiffuseMapSRV)||
+		!LoadTexture(TextureMediaFolder + "BarrackTexture.png", &gTrollSpecularDiffuseMap,&gTrollSpecularDiffuseMapSRV)||
 		!LoadTexture(TextureMediaFolder + "tv.dds", &gTVDiffuseSpecularMap,&gTVDiffuseSpecularMapSRV) ||
 		!LoadTexture(TextureMediaFolder + "greyTexture.jpg", &gGreyDiffuseSpecularMap, &gGreyDiffuseSpecularMapSRV)||
 		!LoadTexture(TextureMediaFolder + "WaterNormalHeight.png", &gWaterNormalMap, &gWaterNormalMapSRV))
@@ -32,7 +32,7 @@ bool TextureManager::LoadTextures()// Load all textures from image
 bool TextureManager::CreateTextures()//Create all textures that are not laoded from image file
 {
 	HRESULT hr = S_OK;
-
+	
 
 	//Shadows
 	ShadowDesc = {};
@@ -247,11 +247,110 @@ bool TextureManager::CreateTextures()//Create all textures that are not laoded f
 		gLastError = "Error creating portal depth stencil view";
 		return false;
 	}
+
+	D3D11_TEXTURE2D_DESC sceneTextureDesc = {};
+	sceneTextureDesc.Width = gViewportWidth;  // Full-screen post-processing - use full screen size for texture
+	sceneTextureDesc.Height = gViewportHeight;
+	sceneTextureDesc.MipLevels = 1; // No mip-maps when rendering to textures (or we would have to render every level)
+	sceneTextureDesc.ArraySize = 1;
+	sceneTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
+	sceneTextureDesc.SampleDesc.Count = 1;
+	sceneTextureDesc.SampleDesc.Quality = 0;
+	sceneTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	sceneTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE; // IMPORTANT: Indicate we will use texture as render target, and pass it to shaders
+	sceneTextureDesc.CPUAccessFlags = 0;
+	sceneTextureDesc.MiscFlags = 0;
+	if (FAILED(gD3DDevice->CreateTexture2D(&sceneTextureDesc, NULL, &gSceneTexture)))
+	{
+		gLastError = "Error creating scene texture";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateTexture2D(&sceneTextureDesc, NULL, &gATexture)))
+	{
+		gLastError = "Error creating scene texture";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateTexture2D(&sceneTextureDesc, NULL, &gBTexture)))
+	{
+		gLastError = "Error creating scene texture";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateTexture2D(&sceneTextureDesc, NULL, &gCTexture)))
+	{
+		gLastError = "Error creating scene texture";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gSceneTexture, NULL, &gSceneRenderTarget)))
+	{
+		gLastError = "Error creating scene render target view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gATexture, NULL, &gATextureRenderTarget)))
+	{
+		gLastError = "Error creating scene render target view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gBTexture, NULL, &gBTextureRenderTarget)))
+	{
+		gLastError = "Error creating scene render target view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateRenderTargetView(gCTexture, NULL, &gCTextureRenderTarget)))
+	{
+		gLastError = "Error creating scene render target view";
+		return false;
+	}
+	D3D11_SHADER_RESOURCE_VIEW_DESC srDesc2 = {};
+	srDesc2.Format = sceneTextureDesc.Format;
+	srDesc2.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srDesc2.Texture2D.MostDetailedMip = 0;
+	srDesc2.Texture2D.MipLevels = 1;
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gSceneTexture, &srDesc2, &gSceneTextureSRV)))
+	{
+		gLastError = "Error creating scene shader resource view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gSceneTexture, &srDesc, &gSceneTextureSRV)))
+	{
+		gLastError = "Error creating scene shader resource view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gATexture, &srDesc, &gATextureSRV)))
+	{
+		gLastError = "Error creating scene shader resource view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gBTexture, &srDesc, &gBTextureSRV)))
+	{
+		gLastError = "Error creating scene shader resource view";
+		return false;
+	}
+	if (FAILED(gD3DDevice->CreateShaderResourceView(gCTexture, &srDesc, &gCTextureSRV)))
+	{
+		gLastError = "Error creating scene shader resource view";
+		return false;
+	}
 	return true;
 }
 
 void TextureManager::ReleaseTextures()//Release all texture and prepare for use
 {
+
+	if (gSceneTexture)gSceneTexture->Release();
+	if (gSceneTextureSRV)gSceneTextureSRV->Release();
+	if (gSceneRenderTarget)gSceneRenderTarget->Release();
+	if (gATextureSRV)              gATextureSRV->Release();
+	if (gATextureRenderTarget)            gATextureRenderTarget->Release();
+	if (gATexture)                 gATexture->Release();
+
+	if (gBTextureSRV)              gBTextureSRV->Release();
+	if (gBTextureRenderTarget)            gBTextureRenderTarget->Release();
+	if (gBTexture)                 gBTexture->Release();
+
+	if (gCTextureSRV)              gCTextureSRV->Release();
+	if (gCTextureRenderTarget)            gCTextureRenderTarget->Release();
+	if (gCTexture)                 gCTexture->Release();
+
 	if (gSkyDiffuseSpecularMapSRV)     gSkyDiffuseSpecularMapSRV->Release();
 	if (gSkyDiffuseSpecularMap)        gSkyDiffuseSpecularMap->Release();
 	if (gWaterNormalMap         ) gWaterNormalMap->Release();
@@ -265,13 +364,20 @@ void TextureManager::ReleaseTextures()//Release all texture and prepare for use
 	if (gRefraction             ) gRefraction->Release();
 	if (gRefractionSRV          ) gRefractionSRV->Release();
 	if (gRefractionRenderTarget ) gRefractionRenderTarget->Release();
-
-
+	
+	
 	if (gPortalDepthStencilView)  gPortalDepthStencilView->Release();
+	if (gPortalDepthStencilView2)  gPortalDepthStencilView2->Release();
 	if (gPortalDepthStencil)      gPortalDepthStencil->Release();
+	if (gPortalDepthStencil2)      gPortalDepthStencil2->Release();
 	if (gPortalTextureSRV)        gPortalTextureSRV->Release();
+	if (gPortalTextureSRV2)		  gPortalTextureSRV2->Release();
 	if (gPortalRenderTarget)      gPortalRenderTarget->Release();
+	if (gPortalRenderTarget2)      gPortalRenderTarget->Release();
 	if (gPortalTexture)           gPortalTexture->Release();
+	if (gPortalTexture2)      gPortalTexture2->Release();
+
+
 
 	if (gLightDiffuseMapSRV)            gLightDiffuseMapSRV->Release();
 	if (gLightDiffuseMap)               gLightDiffuseMap->Release();
@@ -306,5 +412,4 @@ void TextureManager::ReleaseTextures()//Release all texture and prepare for use
 
 	if (gGreyDiffuseSpecularMap)gGreyDiffuseSpecularMap->Release();
 	if (gGreyDiffuseSpecularMapSRV)gGreyDiffuseSpecularMapSRV->Release();
-
 }

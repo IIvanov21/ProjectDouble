@@ -50,8 +50,8 @@ Mesh::Mesh(const std::string& fileName, bool requireTangents /*= false*/)
 		aiProcess_RemoveComponent;
 
 	// Flags to specify what mesh data to ignore
-	int removeComponents = aiComponent_LIGHTS | aiComponent_CAMERAS | aiComponent_TEXTURES | aiComponent_COLORS |
-		aiComponent_ANIMATIONS | aiComponent_MATERIALS;
+	int removeComponents = aiComponent_LIGHTS | aiComponent_CAMERAS  | aiComponent_COLORS |
+		aiComponent_ANIMATIONS ;
 
 	// Add / remove tangents as required by user
 	if (requireTangents)
@@ -357,6 +357,68 @@ Mesh::Mesh(const std::string& fileName, bool requireTangents /*= false*/)
 		hr = gD3DDevice->CreateBuffer(&bufferDesc, &initData, &subMesh.indexBuffer);
 		if (FAILED(hr))  throw std::runtime_error("Failure creating index buffer for " + fileName);
 	}
+	if (scene->HasMaterials())
+	{
+		for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
+		{
+			aiMaterial* mainMaterial = scene->mMaterials[i];//Get current material
+			aiString materialName;//The name of the materials found in the name
+			aiReturn ret;//Load failed/sucessful
+
+			ret = mainMaterial->Get(AI_MATKEY_NAME, materialName);//Material name passed  
+			if (ret != AI_SUCCESS)materialName = "";//Failed to pass material name
+
+			//DiffuseMaps
+			int numOfTextures = mainMaterial->GetTextureCount(aiTextureType_DIFFUSE);//Diffuse texture count
+			aiString textureName;//aiString assimp structure
+
+			if (numOfTextures > 0)
+			{
+				//Create a diffuse map using texture name from the document
+
+				ret = mainMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), textureName);
+				std::string textureFileName = textureName.data;//The actual name of the texture file
+
+				//Loads filename into diffuse map
+				if (!LoadTexture(".\\Media\\Textures\\" + textureFileName, &mSubMeshes[i].diffuseMap, &mSubMeshes[i].diffuseMapSRV))
+				{
+					throw std::runtime_error("Diffuse texture for mesh NOT loaded");
+				}
+			}
+			//Normal maps
+			numOfTextures = mainMaterial->GetTextureCount(aiTextureType_NORMALS);
+			if (numOfTextures > 0)
+			{
+				ret = mainMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_NORMALS, 0), textureName);
+
+				
+				std::string textureFileName = textureName.data;//The actual name of the texture file
+
+				//Loads filename intonormal map
+				if (!LoadTexture(".\\Media\\Textures\\" + textureFileName, &mSubMeshes[i].normalMap, &mSubMeshes[i].normalMapSRV))
+				{
+					throw std::runtime_error("Normal texture for mesh NOT loaded");
+				}
+
+			}
+
+			numOfTextures = mainMaterial->GetTextureCount(aiTextureType_SPECULAR);
+			if (numOfTextures > 0)
+			{
+				ret = mainMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_SPECULAR, 0), textureName);
+
+
+				std::string textureFileName = textureName.data;//The actual name of the texture file
+
+				//Loads filename intonormal map
+				if (!LoadTexture(".\\Media\\Textures\\" + textureFileName, &mSubMeshes[i].specularMap, &mSubMeshes[i].specularMapSRV))
+				{
+					throw std::runtime_error("Normal texture for mesh NOT loaded");
+				}
+
+			}
+		}
+	}
 }
 //Special mesh that allows to create grid in the XZ plane
 //This function allow to use a 2D grind to render water surface //Not usable to create depth and underwater mechanics 
@@ -504,9 +566,15 @@ Mesh::~Mesh()
 {
 	for (auto& subMesh : mSubMeshes)
 	{
-		if (subMesh.indexBuffer)   subMesh.indexBuffer ->Release();
-		if (subMesh.vertexBuffer)  subMesh.vertexBuffer->Release();
-		if (subMesh.vertexLayout)  subMesh.vertexLayout->Release();
+		if (subMesh.indexBuffer)	subMesh.indexBuffer->Release();
+		if (subMesh.vertexBuffer)	subMesh.vertexBuffer->Release();
+		if (subMesh.vertexLayout)	subMesh.vertexLayout->Release();
+		if (subMesh.normalMap)		subMesh.normalMap->Release();
+		if (subMesh.normalMapSRV)	subMesh.normalMapSRV->Release();
+		if (subMesh.specularMap)	subMesh.specularMap->Release();
+		if (subMesh.specularMapSRV)	subMesh.specularMapSRV->Release();
+		if (subMesh.diffuseMap)		subMesh.diffuseMap->Release();
+		if (subMesh.diffuseMapSRV)	subMesh.diffuseMapSRV->Release();
 	}
 }
 
@@ -516,6 +584,10 @@ Mesh::~Mesh()
 // Helper function for Render function - renders a given sub-mesh. World matrices / textures / states etc. must already be set
 void Mesh::RenderSubMesh(const SubMesh& subMesh)
 {
+	if(SetTexture)gD3DContext->PSSetShaderResources(0, 1, &subMesh.diffuseMapSRV);
+	if (SetTexture)gD3DContext->PSSetShaderResources(9, 1, &subMesh.specularMapSRV);
+	if (SetTexture)gD3DContext->PSSetShaderResources(10, 1, &subMesh.normalMapSRV);
+
 	// Set vertex buffer as next data source for GPU
 	UINT stride = subMesh.vertexSize;
 	UINT offset = 0;

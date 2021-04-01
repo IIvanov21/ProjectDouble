@@ -11,7 +11,8 @@
 #include <assimp/scene.h>
 #include <string>
 #include <vector>
-
+#include "TextureManager.h"
+#include "Definitions.h"
 #ifndef _MESH_H_INCLUDED_
 #define _MESH_H_INCLUDED_
 
@@ -44,7 +45,7 @@ public:
 	// Handles rigid body meshes (including single part meshes) as well as skinned meshes
 	// LIMITATION: The mesh must use a single texture throughout
 	void Render(std::vector<CMatrix4x4>& modelMatrices);
-
+	bool SetTexture = false;
 
 
 //--------------------------------------------------------------------------------------
@@ -65,6 +66,15 @@ private:
 
 		unsigned int       numIndices = 0;
 		ID3D11Buffer*      indexBuffer  = nullptr;
+
+		ID3D11Resource* diffuseMap=nullptr;
+		ID3D11ShaderResourceView* diffuseMapSRV=nullptr;
+
+		ID3D11Resource* normalMap = nullptr;
+		ID3D11ShaderResourceView* normalMapSRV = nullptr;
+
+		ID3D11Resource* specularMap = nullptr;
+		ID3D11ShaderResourceView* specularMapSRV = nullptr;
 	};
 
 
@@ -110,7 +120,7 @@ private:
 
     std::vector<SubMesh> mSubMeshes; // The mesh geometry. Nodes refer to sub-meshes in this vector
     std::vector<Node>    mNodes;     // The mesh hierarchy. First entry is root. remainder aree stored in depth-first order
-
+	
 	bool mHasBones; // If any submesh has bones, then all submeshes are given bones - makes rendering easier (one shader for the whole mesh)
 };
 

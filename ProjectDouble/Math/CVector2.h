@@ -6,7 +6,7 @@
 
 #ifndef _CVECTOR2_H_DEFINED_
 #define _CVECTOR2_H_DEFINED_
-
+#include "BaseMath.h"
 #include "MathHelpers.h"
 #include <cmath>
 
@@ -33,15 +33,15 @@ public:
     }
 
     // Construct using a pointer to 2 floats
-    CVector2(const float* pfElts)
+    CVector2(const float* elts)
     {
-        x = pfElts[0];
-        y = pfElts[1];
+        x = elts[0];
+        y = elts[1];
     }
 
 
     /*-----------------------------------------------------------------------------------------
-    Member functions
+        Member functions
     -----------------------------------------------------------------------------------------*/
 
     // Addition of another vector to this one, e.g. Position += Velocity
@@ -56,10 +56,11 @@ public:
     // Plus sign in front of vector - called unary positive and usually does nothing. Included for completeness (e.g. Velocity = +Velocity)
     CVector2& operator+ ();
 
-    // Multiply vector by scalar (scales vector);
+	// Multiply vector by scalar (scales vector);
     CVector2& operator*= (float s);
 
-
+	// Divide vector by scalar (scales vector);
+    CVector2& operator/= (float s);
 };
 
 
@@ -72,10 +73,12 @@ CVector2 operator+ (const CVector2& v, const CVector2& w);
 
 // Vector-vector subtraction
 CVector2 operator- (const CVector2& v, const CVector2& w);
+
 // Vector-scalar multiplication & division
 CVector2 operator* (const CVector2& v, float s);
 CVector2 operator* (float s, const CVector2& v);
 CVector2 operator/ (const CVector2& v, float s);
+
 
 /*-----------------------------------------------------------------------------------------
 Non-member functions
@@ -86,6 +89,10 @@ float Dot(const CVector2& v1, const CVector2& v2);
 
 // Return unit length vector in the same direction as given one
 CVector2 Normalise(const CVector2& v);
-
+float Distance
+(
+    const CVector2& p1,
+    const CVector2& p2
+);
 
 #endif // _CVECTOR3_H_DEFINED_

@@ -21,14 +21,12 @@ extern ID3D11VertexShader* gLightModelVertexShader;
 extern ID3D11PixelShader*  gLightModelPixelShader;
 
 extern ID3D11PixelShader* gTintedTexturePixelShader;
-extern ID3D11VertexShader* gTransformLightModelVertexShader;
-extern ID3D11PixelShader* gTransformLightModelPixelShader;
 extern ID3D11VertexShader* gLerpVertexShader;
 extern ID3D11PixelShader* gLerpPixelShader ;
 extern ID3D11PixelShader* gShadowMappingPixelShader;
-extern ID3D11VertexShader* gShadowMappingVertexShader;
 extern ID3D11PixelShader*  gDepthOnlyPixelShader;
 extern ID3D11VertexShader* gBasicTransformVertexShader;
+extern ID3D11PixelShader* gUnderWaterPostProcess;
 
 extern ID3D11VertexShader* gBasicTransformWorldPosVertexShader;
 extern ID3D11VertexShader* gWaterSurfaceVertexShader;
@@ -37,7 +35,13 @@ extern ID3D11PixelShader* gWaterHeightPixelShader;
 extern ID3D11PixelShader* gReflectedPixelLightingPixelShader;
 extern ID3D11PixelShader* gReflectedTintedTexturePixelShader;
 extern ID3D11PixelShader* gRefractedPixelLightingPixelShader;
-extern ID3D11PixelShader* gRefractedTintedTexturePixelShader;
+extern ID3D11PixelShader* gRefractedTintedTexturePixelShader;     
+extern ID3D11PixelShader* gTreePixelShader;
+extern ID3D11VertexShader* gFullScreenQuadVertexShader;
+extern ID3D11PixelShader* gHorizontalBloomPixelShader;
+extern ID3D11PixelShader* gVerticalBloomPixelShader;
+extern ID3D11PixelShader* gFinalBloomPS;
+
 //--------------------------------------------------------------------------------------
 // Shader creation / destruction
 //--------------------------------------------------------------------------------------

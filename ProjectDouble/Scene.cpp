@@ -4,10 +4,11 @@
 //--------------------------------------------------------------------------------------
 
 #include "Definitions.h"
-#include "ModelsAndMeshes.h"
+#include "ModelManager.h"
 #include "TextureManager.h"
 #include <d3d11.h>
-
+#include "Collision.h"
+#include "SoundClass.h"
 //--------------------------------------------------------------------------------------
 // Constant Buffers
 //--------------------------------------------------------------------------------------
@@ -17,14 +18,19 @@ ID3D11Buffer*     gPerFrameConstantBuffer;
 
 PerModelConstants gPerModelConstants;
 ID3D11Buffer*     gPerModelConstantBuffer;
+
+PostProcessingConstants gPostProcessingConstants;      
+ID3D11Buffer* gPostProcessingConstantBuffer;
 const float ROTATION_SPEED = 2.0f;
 const float MOVEMENT_SPEED = 50.0f;
+const float gWiggleSpeed = 5.0f;
+
 //--------------------------------------------------------------------------------------
 // Scene Data
 //--------------------------------------------------------------------------------------
+PostProcess gCurrentPostProcess = PostProcess::None;
 
-
-
+ID3D11ShaderResourceView* nullView = nullptr;
 
 CVector3 gAmbientColour = { 0.5f, 0.5f, 0.5f }; 
 float    gSpecularPower = 256; 
@@ -33,6 +39,8 @@ ColourRGBA gBackgroundColor = { 0.5f, 0.5f, 0.5f , 1.0f };
 //Objects declaration
 ModelManager* ModelCreator = new ModelManager();//Models and Meshes controller 
 TextureManager* TextureCreator = new TextureManager();//Texture Manager
+Collision* CollisionDetector = new Collision;
+
 CMatrix4x4 CalculateLightViewMatrix(Model* light)
 {
 	return InverseAffine(light->WorldMatrix());
@@ -47,8 +55,7 @@ CMatrix4x4 CalculateLightProjectionMatrix(Model* light)
 
 bool InitGeometry()
 {
-    // Load mesh geometry data, just like TL-Engine this doesn't create anything in the scene. Create a Model for that.
-    // IMPORTANT NOTE: Will only keep the first object from the mesh - multipart objects will have parts missing - see later lab for more robust loader
+    // Load mesh geometry data, support for multiple submeshes
 	ModelCreator->LoadMeshes();
 	
 
@@ -59,19 +66,25 @@ bool InitGeometry()
         return false;
     }
 
+	if (!SoundLoader->Initialize(gHWnd))
+	{
+		gLastError = "Could not initialize Direct Sound.";
+		return false;
+	}
 
     // Create GPU-side constant buffers to receive the gPerFrameConstants and gPerModelConstants structures above
     // These allow us to pass data from CPU to shaders such as lighting information or matrices
     // See the comments above where these variable are declared and also the UpdateScene function
     gPerFrameConstantBuffer = CreateConstantBuffer(sizeof(gPerFrameConstants));
     gPerModelConstantBuffer = CreateConstantBuffer(sizeof(gPerModelConstants));
-    if (gPerFrameConstantBuffer == nullptr || gPerModelConstantBuffer == nullptr)
+	gPostProcessingConstantBuffer = CreateConstantBuffer(sizeof(gPostProcessingConstants));
+    if (gPerFrameConstantBuffer == nullptr || gPerModelConstantBuffer == nullptr || gPostProcessingConstantBuffer==nullptr)
     {
         gLastError = "Error creating constant buffers";
         return false;
     }
 
-
+	//Manually Loaded and Created Textures
 	TextureCreator->LoadTextures();
 
 	TextureCreator->CreateTextures();
@@ -113,13 +126,14 @@ bool InitScene()
 	
 	////Creating 2D texture////
 	ModelCreator->InitialSceneSetup();
+	gPerFrameConstants.blurIncrement = 0.2f;
 	gPerFrameConstants.lerpCount = 0.0f;
 
 
 
 	ModelCreator->CreateCameras();
 
-    return true;
+	return true;
 }
 
 
@@ -131,11 +145,14 @@ void ReleaseResources()
     
     if (gPerModelConstantBuffer)  gPerModelConstantBuffer->Release();
     if (gPerFrameConstantBuffer)  gPerFrameConstantBuffer->Release();
+	if (gPostProcessingConstantBuffer)gPostProcessingConstantBuffer->Release();
 
     ReleaseShaders();
-
+	delete nullView;
     // See note in InitGeometry about why we're not using unique_ptr and having to manually delete
-	ModelCreator->~ModelManager();
+	
+	delete TextureCreator;
+	delete ModelCreator;
 }
 
 
@@ -177,7 +194,15 @@ void RenderDepthBufferFromLight(Model*Light)
 	ModelCreator->gCube[0]->Render();
 	ModelCreator->gCube[1]->Render();
 	ModelCreator->gTeapot->Render();
-
+	ModelCreator->gMainHouse->Render();
+	ModelCreator->gDuck->Render();
+	for (unsigned int i = 0; i < ModelCreator->kTreeNum; ++i)
+	{
+		ModelCreator->gTree[i]->Render();
+		ModelCreator->gTree2[i]->Render();
+	}
+	ModelCreator->gWater->Render();
+	ModelCreator->gHouseTwo->Render();
 }
 // Render everything in the scene from the given camera
 // This code is common between rendering the main scene and rendering the scene in the portal
@@ -185,10 +210,107 @@ void RenderDepthBufferFromLight(Model*Light)
 void RenderSceneFromCamera(Camera* camera)
 {
 	ModelCreator->GetCamera(camera);
-	ModelCreator->PrepareRenderModels(gD3DContext, TextureCreator);
+	ModelCreator->PrepareRenderModels(camera);
 }
 
 
+void SelectPostProcessShaderAndTextures()
+{
+	
+
+	
+	// Prepare custom settings for current post-process
+	
+	if (gCurrentPostProcess == PostProcess::UnderWater)//Select Underwater
+	{
+		gD3DContext->PSSetShader(gUnderWaterPostProcess, nullptr, 0);
+		gD3DContext->Draw(4, 0);
+
+	}
+	
+	
+	if (gCurrentPostProcess == PostProcess::Bloom)
+	{
+		//Apply vertical blur on select lighted area
+		gD3DContext->OMSetRenderTargets(1, &TextureCreator->gATextureRenderTarget, gDepthStencil);
+		gD3DContext->PSSetShaderResources(13, 1, &TextureCreator->gSceneTextureSRV);
+		gD3DContext->PSSetShader(gVerticalBloomPixelShader, nullptr, 0);
+		gD3DContext->Draw(4, 0);
+	
+		//Check the position of the bloom effect inside the vector is odd or even
+		//Prepare render target for horizontal blur on lighted area
+		gD3DContext->OMSetRenderTargets(1, &TextureCreator->gBTextureRenderTarget, gDepthStencil);
+		gD3DContext->PSSetShaderResources(13, 1, &TextureCreator->gSceneTextureSRV);
+		gD3DContext->PSSetShader(gHorizontalBloomPixelShader, nullptr, 0);
+		gD3DContext->Draw(4, 0);
+		////Finally combine all the texture togethers in a Final Pixel Shader
+		gD3DContext->OMSetBlendState(gAdditiveBlendingState, nullptr, 0xffffff);
+		gD3DContext->PSSetShaderResources(13, 1, &TextureCreator->gSceneTextureSRV);
+		gD3DContext->PSSetShaderResources(10, 1, &TextureCreator->gATextureSRV);
+		gD3DContext->PSSetShaderResources(11, 1, &TextureCreator->gBTextureSRV);
+		gD3DContext->PSSetShader(gFinalBloomPS, nullptr, 0);
+		
+	
+	}
+	
+
+
+	
+}
+
+void FullScreenPostProcess(PostProcess postProcess)
+{
+	
+		// Select the back buffer to use for rendering. Not going to clear the back-buffer because we're going to overwrite it all
+		gD3DContext->OMSetRenderTargets(1, &gBackBufferRenderTarget, gDepthStencil);
+		// Give the pixel shader (post-processing shader) access to the scene texture 
+		gD3DContext->PSSetShaderResources(13, 1, &TextureCreator->gSceneTextureSRV);
+		gD3DContext->PSSetSamplers(5, 1, &gPointSampler); // Use point sampling (no bilinear, trilinear, mip-mapping etc. for most post-processes)
+
+
+
+		// Using special vertex shader that creates its own data for a 2D screen quad
+		gD3DContext->VSSetShader(gFullScreenQuadVertexShader, nullptr, 0);
+		gD3DContext->GSSetShader(nullptr, nullptr, 0);  // Switch off geometry shader when not using it (pass nullptr for first parameter)
+
+
+		// States - no blending, don't write to depth buffer and ignore back-face culling
+		gD3DContext->OMSetBlendState(gAlphaBlendingState, nullptr, 0xffffff);
+		gD3DContext->OMSetDepthStencilState(gDepthReadOnlyState, 0);
+		gD3DContext->RSSetState(gCullNoneState);
+
+
+		// No need to set vertex/index buffer (see 2D quad vertex shader), just indicate that the quad will be created as a triangle strip
+		gD3DContext->IASetInputLayout(NULL); // No vertex data
+		gD3DContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+
+		// Select shader and textures needed for the required post-processes (helper function above)
+		SelectPostProcessShaderAndTextures();
+
+
+
+
+		// Set 2D area for full-screen post-processing (coordinates in 0->1 range)
+		gPostProcessingConstants.area2DTopLeft = { 0, 0 }; // Top-left of entire screen
+		gPostProcessingConstants.area2DSize = { 1, 1 }; // Full size of screen
+		gPostProcessingConstants.area2DDepth = 0;        // Depth buffer value for full screen is as close as possible
+
+
+		// Pass over the above post-processing settings (also the per-process settings prepared in UpdateScene function below)
+		UpdateConstantBuffer(gPostProcessingConstantBuffer, gPostProcessingConstants);
+		gD3DContext->VSSetConstantBuffers(1, 1, &gPostProcessingConstantBuffer);
+		gD3DContext->PSSetConstantBuffers(1, 1, &gPostProcessingConstantBuffer);
+
+		
+		gD3DContext->OMSetRenderTargets(1, &gBackBufferRenderTarget, gDepthStencil);
+
+
+		// Draw a quad
+		gD3DContext->Draw(4, 0);
+
+
+}
 
 
 // Rendering the scene now renders everything twice. First it renders the scene for the portal into a texture.
@@ -233,7 +355,7 @@ void RenderScene()
     //-------------------------------------------------------------------------
 
 	D3D11_VIEWPORT vp;
-    //// Portal scene rendering ////
+    // Portal scene rendering ////
 
     // Set the portal texture and portal depth buffer as the targets for rendering
     // The portal texture will later be used on models in the main scene
@@ -288,14 +410,25 @@ void RenderScene()
 
 	//**************************//
 
-	//// Main scene rendering ////
+	// Main scene rendering ////
 
-	// Set the back buffer as the target for rendering and select the main depth buffer.
-	// When finished the back buffer is sent to the "front buffer" - which is the monitor.
-	gD3DContext->OMSetRenderTargets(1, &gBackBufferRenderTarget, gDepthStencil);
+	 /*Set the back buffer as the target for rendering and select the main depth buffer.
+	 When finished the back buffer is sent to the "front buffer" - which is the monitor.*/
 
-	// Clear the back buffer to a fixed colour and the depth buffer to the far distance
-	gD3DContext->ClearRenderTargetView(gBackBufferRenderTarget, &gBackgroundColor.r);
+
+	if (gCurrentPostProcess != PostProcess::None)
+	{
+		gD3DContext->OMSetRenderTargets(1, &TextureCreator->gSceneRenderTarget, gDepthStencil);
+		gD3DContext->ClearRenderTargetView(TextureCreator->gSceneRenderTarget, &gBackgroundColor.r);
+
+
+	}
+	else
+	{
+		gD3DContext->OMSetRenderTargets(1, &gBackBufferRenderTarget, gDepthStencil);
+		gD3DContext->ClearRenderTargetView(gBackBufferRenderTarget, &gBackgroundColor.r);
+	}
+
 	gD3DContext->ClearDepthStencilView(gDepthStencil, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	// Setup the viewport to the size of the main window
@@ -308,19 +441,21 @@ void RenderScene()
 	gD3DContext->RSSetViewports(1, &vp);
 
 	
-	
     
 
     // Render the scene for the main window
     RenderSceneFromCamera(ModelCreator->gCamera);
 
-	ID3D11ShaderResourceView* nullView = nullptr;
+	
 	gD3DContext->PSSetShaderResources(1, 1, &nullView);
     //-------------------------------------------------------------------------
-
+	
 
     //// Scene completion ////
-
+	if (gCurrentPostProcess != PostProcess::None)
+	{
+		FullScreenPostProcess(gCurrentPostProcess);
+	}
     // When drawing to the off-screen back buffer is complete, we "present" the image to the front buffer (the screen)
     gSwapChain->Present(0, 0);
 }
@@ -333,8 +468,11 @@ void RenderScene()
 // Update models and camera. frameTime is the time passed since the last frame
 void UpdateScene(float frameTime)
 {
-	
-	ModelCreator->UpdateModels(frameTime, gPerFrameConstants);
+
+	if (KeyHit(Key_1))gCurrentPostProcess = PostProcess::Bloom;
+	if (KeyHit(Key_0))gCurrentPostProcess = PostProcess::None;
+
+	ModelCreator->UpdateModels(frameTime);
     // Show frame time / FPS in the window title //
     const float fpsUpdateTime = 0.5f; // How long between updates (in seconds)
     static float totalFrameTime = 0;
@@ -348,7 +486,7 @@ void UpdateScene(float frameTime)
         std::ostringstream frameTimeMs;
         frameTimeMs.precision(2);
         frameTimeMs << std::fixed << avgFrameTime * 1000;
-        std::string windowTitle = "Ivaylo Ivanov Graphics Assignment: Frame Time: " + frameTimeMs.str() +
+        std::string windowTitle = "Ivaylo Ivanov Project Double: Frame Time: " + frameTimeMs.str() +
                                   "ms, FPS: " + std::to_string(static_cast<int>(1 / avgFrameTime + 0.5f));
         SetWindowTextA(gHWnd, windowTitle.c_str());
         totalFrameTime = 0;

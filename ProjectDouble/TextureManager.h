@@ -1,11 +1,25 @@
 #pragma once
 #include "Definitions.h"
+
+#ifndef _TEXTURE_H_INCLUDED_
+#define _TEXTURE_H_INCLUDED_
+enum TextureTypes
+{
+	Diffuse,
+	Speuclar,
+	None
+};
 class TextureManager
 {
 public:
 	const std::string TextureMediaFolder = "./Media/Textures/";
 	unsigned int ViewportWidth;
 	unsigned int ViewportHeight;
+
+	ID3D11Texture2D* gSceneTexture = nullptr;
+	ID3D11RenderTargetView* gSceneRenderTarget = nullptr;
+	ID3D11ShaderResourceView* gSceneTextureSRV = nullptr;
+
 	//--------------------------------------------------------------------------------------
 	// Portal Textures
 	//--------------------------------------------------------------------------------------
@@ -42,6 +56,18 @@ public:
 	ID3D11DepthStencilView*   gShadowMap2DepthStencil = nullptr;
 	ID3D11ShaderResourceView* gShadowMap2SRV = nullptr;
 
+	ID3D11Texture2D* gATexture;
+	ID3D11RenderTargetView* gATextureRenderTarget;
+	ID3D11ShaderResourceView* gATextureSRV;
+
+	ID3D11Texture2D* gBTexture;
+	ID3D11RenderTargetView* gBTextureRenderTarget;
+	ID3D11ShaderResourceView* gBTextureSRV;
+
+	ID3D11Texture2D* gCTexture;
+	ID3D11RenderTargetView* gCTextureRenderTarget;
+	ID3D11ShaderResourceView* gCTextureSRV;
+
 	D3D11_TEXTURE2D_DESC ShadowDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -55,7 +81,7 @@ public:
 	ID3D11Resource*           gStoneDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gStoneDiffuseSpecularMapSRV = nullptr; 
 
-	ID3D11Resource* gGreyDiffuseSpecularMap = nullptr;
+	ID3D11Resource*			  gGreyDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gGreyDiffuseSpecularMapSRV = nullptr;
 
 	ID3D11Resource*           gTVDiffuseSpecularMap = nullptr;
@@ -70,7 +96,7 @@ public:
 	ID3D11Resource*           gBrickDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gBrickDiffuseSpecularMapSRV = nullptr;
 
-	ID3D11Resource* gSkyDiffuseSpecularMap = nullptr;
+	ID3D11Resource*			  gSkyDiffuseSpecularMap = nullptr;
 	ID3D11ShaderResourceView* gSkyDiffuseSpecularMapSRV = nullptr;
 
 	ID3D11Resource*           gGroundDiffuseSpecularMap = nullptr;
@@ -82,11 +108,11 @@ public:
 	ID3D11Resource*			  gWoodSpecularDiffuseMap = nullptr;
 	ID3D11ShaderResourceView* gWoodSpecularDiffuseMapSRV = nullptr;
 
-	ID3D11Resource*			 gTeapotSpecularDiffuseMap = nullptr;
+	ID3D11Resource*			  gTeapotSpecularDiffuseMap = nullptr;
 	ID3D11ShaderResourceView* gTeapotSpecularDiffuseMapSRV = nullptr;
 
-	ID3D11Resource*			 gTrollSpecularDiffuseMap = nullptr;
-	ID3D11ShaderResourceView* gTrollSpecularDiffuseMapSRV = nullptr;
+	ID3D11Resource*			  gTrollSpecularDiffuseMap = nullptr;
+	ID3D11ShaderResourceView* gTrollSpecularDiffuseMapSRV = nullptr;                  
 
 	//***************************
 	// Water Rendering Resources
@@ -116,3 +142,6 @@ public:
 	bool CreateTextures();
 	void ReleaseTextures();
 };
+
+extern TextureManager* TextureCreator;
+#endif //TEXTURE_H

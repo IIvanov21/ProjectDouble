@@ -12,4 +12,5 @@ bool InitDirect3D();
 void ShutdownDirect3D();
 
 
+
 #endif //_DIRECT3D_SETUP_H_INCLUDED_

@@ -27,8 +27,14 @@ extern HWND gHWnd;
 // Viewport size
 extern int gViewportWidth;
 extern int gViewportHeight;
-
-
+enum class PostProcess
+{
+	None,
+	Blur,
+	UnderWater,
+	Bloom
+};
+extern PostProcess gCurrentPostProcess;
 // Important DirectX variables
 extern ID3D11Device*           gD3DDevice;
 extern ID3D11DeviceContext*    gD3DContext;
@@ -72,9 +78,9 @@ struct PerFrameConstants
 	
 
     CVector3   light2Position;
-    float      padding3;
+    float      alphaValue;
     CVector3   light2Colour;
-    float      padding4;
+    float      blurIncrement;
 	 
 
     CVector3   ambientColour;
@@ -121,6 +127,14 @@ struct PerFrameConstants
 	float    waterPlaneY;   // Y coordinate of the water plane (before adding the height map)
 	float    waveScale;     // How tall the waves are (rescales weight heights and normals)
 	CVector2 waterMovement; // An offset added to the water height map UVs to make the water surface move
+
+	float dayCycle;
+	CVector3 padding15;
+
+	float waterWiggle;
+	CVector3 padding16;
+
+	
 };
 
 extern PerFrameConstants gPerFrameConstants;      // This variable holds the CPU-side constant buffer described above
@@ -140,5 +154,38 @@ struct PerModelConstants
 extern PerModelConstants gPerModelConstants;      // This variable holds the CPU-side constant buffer described above
 extern ID3D11Buffer*     gPerModelConstantBuffer; // This variable controls the GPU-side constant buffer related to the above structure
 
+// Settings used by post-processes - must match the similar structure in the Common.hlsli shader file
+struct PostProcessingConstants
+{
+	CVector2 area2DTopLeft; // Top-left of post-process area on screen, provided as coordinate from 0.0->1.0 not as a pixel coordinate
+	CVector2 area2DSize;    // Size of post-process area on screen, provided as sizes from 0.0->1.0 (1 = full screen) not as a size in pixels
+	float    area2DDepth;   // Depth buffer value for area (0.0 nearest to 1.0 furthest). Full screen post-processing uses 0.0f
+	CVector3 paddingA;      // Pad things to collections of 4 floats (see notes in earlier labs to read about padding)
 
+	CVector4 polygon2DPoints[4]; // Four points of a polygon in 2D viewport space for polygon post-processing. Matrix transformations already done on C++ side
+
+	// Tint post-process settings
+	CVector3 tintColour;
+	float    paddingB;  // Pad things to collections of 4 floats (see notes in earlier labs to read about padding)
+
+
+
+	// Grey noise post-process settings
+	CVector2 noiseScale;
+	CVector2 noiseOffset;
+
+	// Burn post-process settings
+	float    burnHeight;
+	CVector3 paddingC;
+
+	float tintIncerement;
+	CVector3 paddingD;
+
+	bool bloomEnabled;
+	CVector3 paddingE;
+
+
+};
+extern PostProcessingConstants gPostProcessingConstants;      // This variable holds the CPU-side constant buffer described above
+extern ID3D11Buffer* gPostProcessingConstantBuffer; // This variable controls the GPU-side constant buffer related to the above structure
 #endif //_COMMON_H_INCLUDED_

@@ -21,7 +21,8 @@ public:
 	//-------------------------------------
 	// Construction / Usage
 	//-------------------------------------
-
+    bool Selected = false;
+    float ScaleFactor = 0.0f;
     Model(Mesh* mesh, CVector3 position = { 0,0,0 }, CVector3 rotation = { 0,0,0 }, float scale = 1);
 
 
@@ -31,8 +32,9 @@ public:
 
 
 	// Control a given node in the model using keys provided. Amount of motion performed depends on frame time
-	void Control(int node, float frameTime, KeyCode turnUp, KeyCode turnDown, KeyCode turnLeft, KeyCode turnRight,  
-				                            KeyCode turnCW, KeyCode turnCCW, KeyCode moveForward, KeyCode moveBackward );
+	
+    void Control(int node, float frameTime, KeyCode turnUp, KeyCode turnDown, KeyCode turnLeft, KeyCode turnRight,
+        KeyCode turnCW, KeyCode turnCCW, KeyCode moveForward, KeyCode moveBackward, KeyCode moveLeft, KeyCode moveRight, KeyCode moveUp,KeyCode moveDown);
 
 	void FaceTarget(CVector3 target, int node= 0)
 	{
@@ -66,7 +68,12 @@ public:
                                MatrixRotationZ(rotation.z) * MatrixRotationX(rotation.x) * MatrixRotationY(rotation.y) *
                                MatrixTranslation(Position(node));
     }
-
+  
+    void RotateX(float angle,int node = 0)
+    {
+        mRotation.x += /*2.0f **/ angle;
+        SetRotation(mRotation, node);
+    }
 	// Two ways to set scale: x,y,z separately, or all to the same value
     // To set scale without affecting rotation, normalise each row, then multiply it by the scale value.
 	void SetScale(CVector3 scale, int node = 0)
@@ -88,6 +95,7 @@ private:
 	// World matrices for the model
     // Now that meshes have multiple parts, we need multiple matrices. The root matrix (the first one) is the world matrix
     // for the entire model. The remaining matrices are relative to their parent part. The hierarchy is defined in the mesh (nodes)
+    CVector3 mRotation;
 	std::vector<CMatrix4x4> mWorldMatrices;
 };
 

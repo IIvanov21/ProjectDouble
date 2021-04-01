@@ -77,8 +77,22 @@ CMatrix4x4& CMatrix4x4::operator*=(const CMatrix4x4& m)
 }
 
 
+// Return the given CVector4 transformed by this matrix
+CVector4 CMatrix4x4::operator*=(const CVector4& v)
+{
+    CVector4 vOut;
+
+	vOut.x = v.x * e00 + v.y * e10 + v.z * e20 + v.w * e30;
+	vOut.y = v.x * e01 + v.y * e11 + v.z * e21 + v.w * e31;
+	vOut.z = v.x * e02 + v.y * e12 + v.z * e22 + v.w * e32;
+	vOut.w = v.x * e03 + v.y * e13 + v.z * e23 + v.w * e33;
+
+	return vOut;
+}
+
+
 /*-----------------------------------------------------------------------------------------
-    Operators
+    Non-member Operators
 -----------------------------------------------------------------------------------------*/
 
 // Matrix-matrix multiplication
@@ -109,6 +123,18 @@ CMatrix4x4 operator*(const CMatrix4x4& m1, const CMatrix4x4& m2)
     return mOut;
 }
 
+// Return the given CVector4 transformed by the given matrix
+CVector4 operator*(const CVector4& v, const CMatrix4x4& m)
+{
+    CVector4 vOut;
+
+	vOut.x = v.x * m.e00 + v.y * m.e10 + v.z * m.e20 + v.w * m.e30;
+	vOut.y = v.x * m.e01 + v.y * m.e11 + v.z * m.e21 + v.w * m.e31;
+	vOut.z = v.x * m.e02 + v.y * m.e12 + v.z * m.e22 + v.w * m.e32;
+	vOut.w = v.x * m.e03 + v.y * m.e13 + v.z * m.e23 + v.w * m.e33;
+
+	return vOut;
+}
 
 
 /*-----------------------------------------------------------------------------------------
@@ -295,7 +321,86 @@ CVector3 CMatrix4x4::GetEulerAngles()
 	return { atan2(sX, cX), atan2(sY, cY), atan2(sZ, cZ) };
 }
 
+// Make this matrix an X-axis rotation by the given angle (radians)
+void CMatrix4x4::MakeRotationX(const float x)
+{
+    float sX, cX;
+    gen::SinCos(x, &sX, &cX);
 
+    e00 = 1.0f;
+    e01 = 0.0f;
+    e02 = 0.0f;
+    e03 = 0.0f;
+
+    e10 = 0.0f;
+    e11 = cX;
+    e12 = sX;
+    e13 = 0.0f;
+
+    e20 = 0.0f;
+    e21 = -sX;
+    e22 = cX;
+    e23 = 0.0f;
+
+    e30 = 0.0f;
+    e31 = 0.0f;
+    e32 = 0.0f;
+    e33 = 1.0f;
+}
+
+// Make this matrix a Y-axis rotation by the given angle (radians)
+void CMatrix4x4::MakeRotationY(const float y)
+{
+    float sY, cY;
+    gen::SinCos(y, &sY, &cY);
+
+    e00 = cY;
+    e01 = 0.0f;
+    e02 = -sY;
+    e03 = 0.0f;
+
+    e10 = 0.0f;
+    e11 = 1.0f;
+    e12 = 0.0f;
+    e13 = 0.0f;
+
+    e20 = sY;
+    e21 = 0.0f;
+    e22 = cY;
+    e23 = 0.0f;
+
+    e30 = 0.0f;
+    e31 = 0.0f;
+    e32 = 0.0f;
+    e33 = 1.0f;
+}
+
+// Make this matrix a Z-axis rotation by the given angle (radians)
+void CMatrix4x4::MakeRotationZ(const float z)
+{
+    float sZ, cZ;
+    gen::SinCos(z, &sZ, &cZ);
+
+    e00 = cZ;
+    e01 = sZ;
+    e02 = 0.0f;
+    e03 = 0.0f;
+
+    e10 = -sZ;
+    e11 = cZ;
+    e12 = 0.0f;
+    e13 = 0.0f;
+
+    e20 = 0.0f;
+    e21 = 0.0f;
+    e22 = 1.0f;
+    e23 = 0.0f;
+
+    e30 = 0.0f;
+    e31 = 0.0f;
+    e32 = 0.0f;
+    e33 = 1.0f;
+}
 
 // Transpose the matrix (rows become columns). There are two ways to store a matrix, by rows or by columns.
 // Different apps use different methods. Use Transpose to swap when necessary.
@@ -307,4 +412,78 @@ void CMatrix4x4::Transpose()
     std::swap(e12, e21);
     std::swap(e13, e31);
     std::swap(e23, e32);
+}
+
+void CMatrix4x4::FaceTarget
+(
+    const CVector3& target,
+    const CVector3& up /*= CVector3::kYAxis*/,
+    const bool      bLH /*= true*/
+)
+{
+    // Use cross product of target direction and up vector to give third axis, then orthogonalise
+    CVector3 axisX, axisY, axisZ;
+    if (bLH)
+    {
+        axisZ = Normalise(target - GetPosition());
+        if (axisZ.IsZero()) return;
+        axisX = Normalise(Cross(up, axisZ));
+        if (axisX.IsZero()) return;
+        axisY = Cross(axisZ, axisX); // Will already be normalised
+    }
+    else
+    {
+        axisZ = Normalise(GetPosition() - target);
+        if (axisZ.IsZero()) return;
+        axisX = Normalise(Cross(axisZ, up));
+        if (axisX.IsZero()) return;
+        axisY = Cross(axisX, axisZ); // Will already be normalised
+    }
+}
+void CMatrix4x4::MakeRotation
+(
+    const CVector3& axis,
+    const float  fAngle
+)
+{
+    //GEN_GUARD;
+
+    float s, c;
+    gen::SinCos(fAngle, &s, &c);
+    float t = 1.0f - c;
+
+    CVector3 axisNorm = Normalise(axis);
+    //GEN_ASSERT(!axisNorm.IsZero(), "Zero length axis");
+
+   float sx = s * axisNorm.x;
+   float sy = s * axisNorm.y;
+   float sz = s * axisNorm.z;
+   float tx = t * axisNorm.x;
+   float ty = t * axisNorm.y;
+   float tz = t * axisNorm.z;
+   float txy = ty * axisNorm.x;
+   float tyz = tz * axisNorm.y;
+   float tzx = tx * axisNorm.z;
+
+    e00 = tx * axisNorm.x + c;
+    e01 = txy + sz;
+    e02 = tzx - sy;
+    e03 = 0.0f;
+
+    e10 = txy - sz;
+    e11 = ty * axisNorm.y + c;
+    e12 = tyz + sx;
+    e13 = 0.0f;
+
+    e20 = tzx + sy;
+    e21 = tyz - sx;
+    e22 = tz * axisNorm.z + c;
+    e23 = 0.0f;
+
+    e30 = 0.0f;
+    e31 = 0.0f;
+    e32 = 0.0f;
+    e33 = 1.0f;
+
+    //GEN_ENDGUARD;
 }
